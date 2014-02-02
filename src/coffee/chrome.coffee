@@ -1,0 +1,2 @@
+define [], ->
+  return chrome

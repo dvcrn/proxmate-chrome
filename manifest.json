@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "ProxMate Connect",
+  "version": "1.0.0",
+  "description": "Intelligent proxy package manager",
+  "background": {
+    "page": "background.html"
+  },
+  "homepage_url": "http://proxmate.dave.cx/",
+  "browser_action": {
+    "default_title": "Click to enable / disable ProxMate",
+    "default_icon": "ressources/images/icon128.png"
+  },
+  "content_scripts": [
+  ],
+  "icons": {
+    "48": "ressources/images/icon48.png",
+    "24": "ressources/images/icon24.png",
+    "16": "ressources/images/icon16.png",
+    "128": "ressources/images/icon128.png"
+   },
+   "web_accessible_resources": [
+    "*"
+  ],
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "proxy",
+    "*://*/",
+    "tabs",
+    "webNavigation",
+    "storage"
+  ]
+}
