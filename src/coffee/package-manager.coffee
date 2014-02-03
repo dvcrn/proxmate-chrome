@@ -41,12 +41,26 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
       StorageManager.set(key, packageData)
       StorageManager.set('installed_packages', installedPackages)
 
+  ###*
+   * Returns all installed packages with their package contents
+   * @return {Object} packages
+  ###
+  getInstalledPackages = ->
+    # Query storage for all installed packages
+    installedPackages = StorageManager.get('installed_packages')
+    packageJson = []
+    for id, version of installedPackages
+      packageJson.push(StorageManager.get(id))
+
+    return packageJson
+
 
   exports = {
     init: init
     checkForUpdates: checkForUpdates
     downloadVersionRepository: downloadVersionRepository
     installPackage: installPackage
+    getInstalledPackages: getInstalledPackages
   }
 
   return exports

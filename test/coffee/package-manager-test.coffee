@@ -131,3 +131,70 @@ define ['package-manager', 'StorageMock'], (PackageManager, StorageMock) ->
 
         assert.isTrue(StorageSetMock.calledWith(pkgId, pkgInfo))
         assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject))
+
+        StorageSetMock.restore()
+        StorageGetMock.restore()
+
+    describe 'Basic functionality', ->
+
+      it 'should retrieve all installed packages', ->
+        expectedJson = [
+          {
+            "name": "Test Package 1",
+            "version": 100,
+            "url": "http://pandora.com",
+            "user": "52e51a98217d32e2270e211f",
+            "country": "52e5c40294ed6bd4032daa49",
+            "_id": "anotherid",
+            "__v": 0,
+            "createdAt": "2014-01-27T02:34:06.874Z",
+            "routeRegex": [
+              "host == 'www.pandora.com'"
+            ],
+            "hosts": [
+              "pandora.com",
+              "*.pandora.com"
+            ]
+          },
+          {
+            "name": "Test Package 2",
+            "version": 100,
+            "url": "http://pandora.com",
+            "user": "52e51a98217d32e2270e211f",
+            "country": "52e5c40294ed6bd4032daa49",
+            "_id": 123,
+            "__v": 0,
+            "createdAt": "2014-01-27T02:34:06.874Z",
+            "routeRegex": [
+              "host == 'www.pandora.com'"
+            ],
+            "hosts": [
+              "pandora.com",
+              "*.pandora.com"
+            ]
+          }
+        ]
+
+        StorageGetMock = sinon.stub(StorageMock, 'get', (key) ->
+          switch key
+            when 'installed_packages'
+              return {
+                'anotherid': 10,
+                123: 1
+              }
+
+            when 'anotherid'
+              return expectedJson[0]
+
+            when '123'
+              return expectedJson[1]
+        )
+
+        packages = PackageManager.getInstalledPackages()
+
+        assert.isTrue(StorageGetMock.calledThrice, 'the storage has been queried the correct amount of times')
+        assert.isTrue(StorageGetMock.calledWith('installed_packages'), 'Installed packages have been queried from storage')
+        assert.isTrue(StorageGetMock.calledWith('anotherid'), 'first installed package has been queried from storage')
+        assert.isTrue(StorageGetMock.calledWith('123'), 'second installed package has been queried from storage')
+
+        assert.deepEqual(expectedJson.sort(), packages.sort())

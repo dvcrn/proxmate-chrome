@@ -102,7 +102,7 @@
           return assert.isTrue(installPackageStub.calledWith('somethingElseOutdated'));
         });
       });
-      return describe('Installation behaviour', function() {
+      describe('Installation behaviour', function() {
         return it('should download package information from server', function() {
           var StorageGetMock, StorageSetMock, newInstalledPackageObject, pkgId, pkgInfo;
           pkgId = 'somethingOutdated';
@@ -136,7 +136,58 @@
           assert.isTrue(StorageSetMock.calledTwice);
           assert.isTrue(StorageGetMock.calledWith('installed_packages'));
           assert.isTrue(StorageSetMock.calledWith(pkgId, pkgInfo));
-          return assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject));
+          assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject));
+          StorageSetMock.restore();
+          return StorageGetMock.restore();
+        });
+      });
+      return describe('Basic functionality', function() {
+        return it('should retrieve all installed packages', function() {
+          var StorageGetMock, expectedJson, packages;
+          expectedJson = [
+            {
+              "name": "Test Package 1",
+              "version": 100,
+              "url": "http://pandora.com",
+              "user": "52e51a98217d32e2270e211f",
+              "country": "52e5c40294ed6bd4032daa49",
+              "_id": "anotherid",
+              "__v": 0,
+              "createdAt": "2014-01-27T02:34:06.874Z",
+              "routeRegex": ["host == 'www.pandora.com'"],
+              "hosts": ["pandora.com", "*.pandora.com"]
+            }, {
+              "name": "Test Package 2",
+              "version": 100,
+              "url": "http://pandora.com",
+              "user": "52e51a98217d32e2270e211f",
+              "country": "52e5c40294ed6bd4032daa49",
+              "_id": 123,
+              "__v": 0,
+              "createdAt": "2014-01-27T02:34:06.874Z",
+              "routeRegex": ["host == 'www.pandora.com'"],
+              "hosts": ["pandora.com", "*.pandora.com"]
+            }
+          ];
+          StorageGetMock = sinon.stub(StorageMock, 'get', function(key) {
+            switch (key) {
+              case 'installed_packages':
+                return {
+                  'anotherid': 10,
+                  123: 1
+                };
+              case 'anotherid':
+                return expectedJson[0];
+              case '123':
+                return expectedJson[1];
+            }
+          });
+          packages = PackageManager.getInstalledPackages();
+          assert.isTrue(StorageGetMock.calledThrice, 'the storage has been queried the correct amount of times');
+          assert.isTrue(StorageGetMock.calledWith('installed_packages'), 'Installed packages have been queried from storage');
+          assert.isTrue(StorageGetMock.calledWith('anotherid'), 'first installed package has been queried from storage');
+          assert.isTrue(StorageGetMock.calledWith('123'), 'second installed package has been queried from storage');
+          return assert.deepEqual(expectedJson.sort(), packages.sort());
         });
       });
     });
