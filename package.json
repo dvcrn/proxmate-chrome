@@ -5,7 +5,7 @@
   "description": "asdf",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start",
+    "test": "./node_modules/.bin/grunt test",
     "postinstall": "node_modules/.bin/bower install"
   },
   "author": "",
@@ -28,6 +28,7 @@
     "karma-sinon-chai": "~0.1.4",
     "grunt": "~0.4.2",
     "grunt-karma": "~0.6.2",
-    "bower": "~1.2.8"
+    "bower": "~1.2.8",
+    "grunt-cli": "~0.1.13"
   }
 }
