@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
-    "postinstall" : "node_modules/.bin/bower install"
+    "postinstall": "node_modules/.bin/bower install"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "karma-chai": "0.0.2",
     "karma-sinon-chai": "~0.1.4",
     "grunt": "~0.4.2",
-    "grunt-karma": "~0.6.2"
+    "grunt-karma": "~0.6.2",
+    "bower": "~1.2.8"
   }
 }
