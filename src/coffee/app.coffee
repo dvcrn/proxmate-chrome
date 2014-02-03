@@ -16,5 +16,5 @@ require.config
     Config.init()
     Storage.init()
     PackageManager.init()
-	)
+  )
 )()
