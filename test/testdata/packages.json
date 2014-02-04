@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Test Package 1",
+    "version": 1,
+    "url": "http://pandora.com",
+    "user": "52e51a98217d32e2270e211f",
+    "country": "52e5c40294ed6bd4032daa49",
+    "_id": "anotherid",
+    "__v": 0,
+    "createdAt": "2014-01-27T02:34:06.874Z",
+    "routing": [
+      {
+        "startsWith": "",
+        "contains": [
+          "vevo.com",
+          "vevo2.com"
+        ],
+        "host": ""
+      }
+    ],
+    "hosts": [
+      "pandora.com",
+      "*.pandora.com"
+    ]
+  },
+  {
+    "name": "Test Package 2",
+    "version": 2,
+    "url": "http://pandora.com",
+    "user": "52e51a98217d32e2270e211f",
+    "country": "52e5c40294ed6bd4032daa49",
+    "_id": "1234",
+    "__v": 0,
+    "createdAt": "2014-01-27T02:34:06.874Z",
+    "routing": [
+      {
+        "startsWith": "http://www.beatsmusic.com",
+        "contains": [],
+        "host": ""
+      }
+    ],
+    "hosts": [
+      "pandora.com",
+      "*.pandora.com"
+    ]
+  },
+  {
+    "name": "Test Package 3",
+    "version": 3,
+    "url": "http://pandora.com",
+    "user": "52e51a98217d32e2270e211f",
+    "country": "anothercountry",
+    "_id": "113",
+    "__v": 0,
+    "createdAt": "2014-01-27T02:34:06.874Z",
+    "routing": [
+      {
+        "startsWith": "",
+        "contains": [],
+        "host": "www.google.com"
+      },
+      {
+        "startsWith": "",
+        "contains": [],
+        "host": "another.com"
+      }
+    ],
+    "hosts": [
+      "pandora.com",
+      "*.pandora.com"
+    ]
+  }
+]

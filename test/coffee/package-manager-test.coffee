@@ -24,7 +24,15 @@ require.config
       'storage': 'StorageMock',
       'config': 'ConfigMock'
 
-define ['package-manager', 'StorageMock'], (PackageManager, StorageMock) ->
+define [
+  'package-manager',
+  'StorageMock',
+  'text!../testdata/packages.json',
+  'text!../testdata/servers.json'
+], (PackageManager, StorageMock, testPackages, testServers) ->
+  testServers = JSON.parse(testServers)
+  testPackages = JSON.parse(testPackages)
+
   describe 'Package Manager', ->
     beforeEach ->
       requests = this.requests = [];
@@ -89,28 +97,11 @@ define ['package-manager', 'StorageMock'], (PackageManager, StorageMock) ->
     describe 'Installation behaviour', ->
       it 'should download package information from server', ->
         pkgId = 'somethingOutdated'
-        pkgInfo =
-          {
-            "name": "Test Package",
-            "version": 100,
-            "url": "http://pandora.com",
-            "user": "52e51a98217d32e2270e211f",
-            "country": "52e5c40294ed6bd4032daa49",
-            "_id": "52e5c59e18bf010c04b0ef9e",
-            "__v": 0,
-            "createdAt": "2014-01-27T02:34:06.874Z",
-            "routeRegex": [
-              "host == 'www.pandora.com'"
-            ],
-            "hosts": [
-              "pandora.com",
-              "*.pandora.com"
-            ]
-          }
+        pkgInfo = testPackages[0]
 
         newInstalledPackageObject = {
           'somethingThatsUpToDate': 2,
-          'somethingOutdated': 100,
+          'somethingOutdated': 1,
           'somethingWithoutUpdate': 1,
           'somethingElseOutdated': 2,
         }
@@ -129,8 +120,8 @@ define ['package-manager', 'StorageMock'], (PackageManager, StorageMock) ->
 
         assert.isTrue(StorageGetMock.calledWith('installed_packages'))
 
-        assert.isTrue(StorageSetMock.calledWith(pkgId, pkgInfo))
-        assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject))
+        assert.isTrue(StorageSetMock.calledWith(pkgId, pkgInfo), 'The Storage got called with the correct ID and payload')
+        assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array')
 
         StorageSetMock.restore()
         StorageGetMock.restore()
@@ -138,63 +129,25 @@ define ['package-manager', 'StorageMock'], (PackageManager, StorageMock) ->
     describe 'Basic functionality', ->
 
       it 'should retrieve all installed packages', ->
-        expectedJson = [
-          {
-            "name": "Test Package 1",
-            "version": 100,
-            "url": "http://pandora.com",
-            "user": "52e51a98217d32e2270e211f",
-            "country": "52e5c40294ed6bd4032daa49",
-            "_id": "anotherid",
-            "__v": 0,
-            "createdAt": "2014-01-27T02:34:06.874Z",
-            "routeRegex": [
-              "host == 'www.pandora.com'"
-            ],
-            "hosts": [
-              "pandora.com",
-              "*.pandora.com"
-            ]
-          },
-          {
-            "name": "Test Package 2",
-            "version": 100,
-            "url": "http://pandora.com",
-            "user": "52e51a98217d32e2270e211f",
-            "country": "52e5c40294ed6bd4032daa49",
-            "_id": 123,
-            "__v": 0,
-            "createdAt": "2014-01-27T02:34:06.874Z",
-            "routeRegex": [
-              "host == 'www.pandora.com'"
-            ],
-            "hosts": [
-              "pandora.com",
-              "*.pandora.com"
-            ]
-          }
-        ]
+        expectedJson = testPackages
 
         StorageGetMock = sinon.stub(StorageMock, 'get', (key) ->
           switch key
             when 'installed_packages'
-              return {
-                'anotherid': 10,
-                123: 1
-              }
-
-            when 'anotherid'
-              return expectedJson[0]
-
-            when '123'
-              return expectedJson[1]
+              ids = {}
+              for pkg in testPackages
+                ids[pkg._id] = pkg.version
+              return ids
+            else
+              for pkg in testPackages
+                if pkg._id is key
+                  return pkg
         )
 
         packages = PackageManager.getInstalledPackages()
-
-        assert.isTrue(StorageGetMock.calledThrice, 'the storage has been queried the correct amount of times')
+        assert.equal((testPackages.length + 1), StorageGetMock.callCount)
         assert.isTrue(StorageGetMock.calledWith('installed_packages'), 'Installed packages have been queried from storage')
-        assert.isTrue(StorageGetMock.calledWith('anotherid'), 'first installed package has been queried from storage')
-        assert.isTrue(StorageGetMock.calledWith('123'), 'second installed package has been queried from storage')
+        for pkg in testPackages
+          assert.isTrue(StorageGetMock.calledWith(pkg._id), 'Got called with the correct id')
 
         assert.deepEqual(expectedJson.sort(), packages.sort())
