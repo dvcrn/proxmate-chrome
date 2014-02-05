@@ -7,14 +7,19 @@ require.config
 	require([
     'config',
     'package-manager',
-    'storage'
+    'storage',
+    'proxy-manager'
   ], (
     Config,
     PackageManager,
-    Storage
+    Storage,
+    ProxyManager
   ) ->
     Config.init()
     Storage.init()
     PackageManager.init()
+    ProxyManager.init()
+
+
   )
 )()

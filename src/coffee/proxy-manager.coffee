@@ -1,4 +1,4 @@
-define [], () ->
+define ['chrome'], (Chrome) ->
   init = ->
 
   ###*
@@ -80,13 +80,36 @@ define [], () ->
 
     return "function FindProxyForURL(url, host) {#{configLines.join(' ')}}"
 
+  ###*
+   * Sets browser wide proxy to autoconfig
+   * @param {String}   pacScript the autoconfig string
+   * @param {Function} callback  callback to execute after
+  ###
+  setProxyAutoconfig = (pacScript, callback) ->
+    config =
+        mode: "pac_script",
+        pacScript:
+          data: pacScript
 
+    Chrome.proxy.settings.set({
+      value: config,
+      scope: 'regular'
+    }, callback)
+
+  ###*
+   * Removes all custom proxies and resets to system
+   * @param  {Function} callback callback
+  ###
+  clearProxy = (callback) ->
+    Chrome.proxy.settings.clear({}, callback);
 
   exports = {
     init: init
     generateProxyAutoconfigScript: generateProxyAutoconfigScript
     parseRoutingConfig: parseRoutingConfig
     generateAndScrumbleServerString: generateAndScrumbleServerString
+    setProxyAutoconfig: setProxyAutoconfig
+    clearProxy: clearProxy
   }
 
   return exports

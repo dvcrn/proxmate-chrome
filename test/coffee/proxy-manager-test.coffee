@@ -1,4 +1,17 @@
-define ['proxy-manager', 'text!../testdata/packages.json', 'text!../testdata/servers.json'], (ProxyManager, testPackages, testServers) ->
+define 'ChromeProxyMock', ->
+  return {
+    proxy:
+      settings:
+        set: ->
+        clear: ->
+  }
+
+require.config
+  map:
+    'proxy-manager':
+      'chrome': 'ChromeProxyMock'
+
+define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'text!../testdata/servers.json'], (ProxyManager, Chrome, testPackages, testServers) ->
   testServers = JSON.parse(testServers)
   testPackages = JSON.parse(testPackages)
 
@@ -61,3 +74,26 @@ define ['proxy-manager', 'text!../testdata/packages.json', 'text!../testdata/ser
         assert.equal(Object.keys(serverCountries).length, generateAndScrumbleServerStringStub.callCount)
         parseRoutingConfigSpy.restore()
         generateAndScrumbleServerStringStub.restore()
+
+    describe 'Proxy setting / removing behaviour', ->
+      it 'should set the proxy correctly', ->
+        proxySetStub = sinon.stub(Chrome.proxy.settings, 'set')
+        proxyString = 'asdf'
+
+        expectedPayload =
+          value:
+            mode: "pac_script",
+            pacScript:
+              data: 'asdf',
+          scope: 'regular'
+
+        ProxyManager.setProxyAutoconfig(proxyString)
+
+        assert.isTrue(proxySetStub.calledOnce)
+        assert.isTrue(proxySetStub.calledWith(expectedPayload))
+
+        proxyClearStub = sinon.stub(Chrome.proxy.settings, 'clear')
+        ProxyManager.clearProxy()
+        assert.isTrue(proxyClearStub.calledOnce)
+
+

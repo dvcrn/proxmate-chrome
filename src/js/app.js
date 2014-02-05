@@ -8,10 +8,11 @@
   });
 
   (function() {
-    return require(['config', 'package-manager', 'storage'], function(Config, PackageManager, Storage) {
+    return require(['config', 'package-manager', 'storage', 'proxy-manager'], function(Config, PackageManager, Storage, ProxyManager) {
       Config.init();
       Storage.init();
-      return PackageManager.init();
+      PackageManager.init();
+      return ProxyManager.init();
     });
   })();
 
