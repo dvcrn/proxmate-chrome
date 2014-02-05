@@ -34,9 +34,12 @@ define ['proxy-manager', 'text!../testdata/packages.json', 'text!../testdata/ser
 
       it 'should generate the correct proxy autoconfig', ->
         parseRoutingConfigSpy = sinon.spy(ProxyManager, 'parseRoutingConfig')
-        generateAndScrumbleServerStringStub = sinon.spy(ProxyManager, 'generateAndScrumbleServerString')
+        # We remove the random element and directly join the string, to be able to compare the result
+        generateAndScrumbleServerStringStub = sinon.stub(ProxyManager, 'generateAndScrumbleServerString', (serverArray) ->
+          return "PROXY #{serverArray.join('; PROXY ')}"
+        )
 
-
+        # Check if the routing generator got called for every server routing element available
         actualConfig = ProxyManager.generateProxyAutoconfigScript(testPackages, testServers)
         routeAmounts = 0
         for pkg in testPackages
@@ -45,6 +48,8 @@ define ['proxy-manager', 'text!../testdata/packages.json', 'text!../testdata/ser
             assert.isTrue(parseRoutingConfigSpy.calledWith(packageRoute), 'called the config generator with the correct parameter')
 
         assert.equal(routeAmounts, parseRoutingConfigSpy.callCount)
+
+        # Compare the pac script result
         expectedConfig = "function FindProxyForURL(url, host) {if ((url.indexOf('vevo.com') != -1 && url.indexOf('vevo2.com') != -1) || (shExpMatch(url, 'http://www.beatsmusic.com*'))) { return 'PROXY http://einsvonzwei.de:8080; PROXY http://zweivonzwei.de:8080' } else if ((host == 'www.google.com') || (host == 'another.com')) { return 'PROXY http://anothercountry.de:8080' } else { return 'DIRECT'; }}"
         assert.equal(expectedConfig, actualConfig)
 

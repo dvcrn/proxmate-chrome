@@ -34,7 +34,9 @@
         return it('should generate the correct proxy autoconfig', function() {
           var actualConfig, expectedConfig, generateAndScrumbleServerStringStub, packageRoute, parseRoutingConfigSpy, pkg, routeAmounts, server, serverCountries, _i, _j, _k, _len, _len1, _len2, _ref;
           parseRoutingConfigSpy = sinon.spy(ProxyManager, 'parseRoutingConfig');
-          generateAndScrumbleServerStringStub = sinon.spy(ProxyManager, 'generateAndScrumbleServerString');
+          generateAndScrumbleServerStringStub = sinon.stub(ProxyManager, 'generateAndScrumbleServerString', function(serverArray) {
+            return "PROXY " + (serverArray.join('; PROXY '));
+          });
           actualConfig = ProxyManager.generateProxyAutoconfigScript(testPackages, testServers);
           routeAmounts = 0;
           for (_i = 0, _len = testPackages.length; _i < _len; _i++) {

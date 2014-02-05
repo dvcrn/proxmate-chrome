@@ -34,6 +34,11 @@
     */
 
     generateAndScrumbleServerString = function(serverArray) {
+      var i, j, _i, _ref, _ref1;
+      for (i = _i = _ref = serverArray.length - 1; _ref <= 1 ? _i <= 1 : _i >= 1; i = _ref <= 1 ? ++_i : --_i) {
+        j = Math.floor(Math.random() * (i + 1));
+        _ref1 = [serverArray[j], serverArray[i]], serverArray[i] = _ref1[0], serverArray[j] = _ref1[1];
+      }
       return "PROXY " + (serverArray.join('; PROXY '));
     };
     /**

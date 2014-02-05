@@ -29,6 +29,10 @@ define [], () ->
    * @return {String}             the serverString
   ###
   generateAndScrumbleServerString = (serverArray) ->
+    for i in [serverArray.length-1..1]
+        j = Math.floor Math.random() * (i + 1)
+        [serverArray[i], serverArray[j]] = [serverArray[j], serverArray[i]]
+
     return "PROXY #{serverArray.join('; PROXY ')}"
 
   ###*
