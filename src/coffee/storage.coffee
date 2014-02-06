@@ -1,6 +1,6 @@
 define ['chrome'], (Chrome) ->
-  init = ->
-    copyFromChromeStorage()
+  init = (callback) ->
+    copyFromChromeStorage(callback)
 
   # Internal array to keep in ram for faster look ups
   internStorage = {}
@@ -15,9 +15,10 @@ define ['chrome'], (Chrome) ->
       Chrome.storage.local.set(internStorage)
     , 1000)
 
-  copyFromChromeStorage = ->
+  copyFromChromeStorage = (callback) ->
     Chrome.storage.local.get(null, (object) ->
       internStorage = object
+      callback()
     )
 
   ###*

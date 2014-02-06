@@ -16,10 +16,18 @@ require.config
     ProxyManager
   ) ->
     Config.init()
-    Storage.init()
-    PackageManager.init()
-    ProxyManager.init()
+    # Storage is built on top of asynchronous chrome.storage code.
+    # We have to use a callback to make sure the content has been copied from storage into ram
+    Storage.init(->
+      PackageManager.init()
+      ProxyManager.init()
 
+      packages = PackageManager.getInstalledPackages()
+      console.info packages
+      pac = ProxyManager.generateProxyAutoconfigScript(packages)
+      # console.info pac
+      # ProxyManager.setProxyAutoconfig(pac)
+    )
 
   )
 )()

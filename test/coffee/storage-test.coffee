@@ -15,7 +15,7 @@ require.config
 
 # The testsuite
 define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
-	describe 'Storage', ->
+  describe 'Storage', ->
 
     after ->
       require.config({map: {}})
@@ -29,7 +29,7 @@ define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
 
     describe 'Testing get/set', ->
       beforeEach ->
-        this.clock = sinon.useFakeTimers();
+        this.clock = sinon.useFakeTimers()
 
       afterEach ->
         StorageModule.flush()
@@ -76,12 +76,11 @@ define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
           callback expectedStorageContent
         )
 
-        StorageModule.init()
+        callback = sinon.spy()
+        StorageModule.init(callback)
 
+        assert.isTrue(callback.calledOnce, 'Callback executed correctly')
         assert.isTrue(stub.calledOnce)
         assert.equal(456, StorageModule.get(123))
         assert.equal('muh', StorageModule.get('asdf'))
         assert.equal(9999999, StorageModule.get(8888))
-
-
-

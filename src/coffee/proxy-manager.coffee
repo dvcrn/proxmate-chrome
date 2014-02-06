@@ -49,7 +49,7 @@ define ['chrome'], (Chrome) ->
       if server.country not of countryServersMapping
         countryServersMapping[server.country] = []
 
-      countryServersMapping[server.country].push("#{server.url}:#{server.port}")
+      countryServersMapping[server.country].push("#{server.host}:#{server.port}")
 
     parsedRules = {}
     # Iterate over all packages
@@ -90,6 +90,8 @@ define ['chrome'], (Chrome) ->
         mode: "pac_script",
         pacScript:
           data: pacScript
+
+    console.info pacScript
 
     Chrome.proxy.settings.set({
       value: config,

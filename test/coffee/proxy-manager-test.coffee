@@ -63,7 +63,7 @@ define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'te
         assert.equal(routeAmounts, parseRoutingConfigSpy.callCount)
 
         # Compare the pac script result
-        expectedConfig = "function FindProxyForURL(url, host) {if ((url.indexOf('vevo.com') != -1 && url.indexOf('vevo2.com') != -1) || (shExpMatch(url, 'http://www.beatsmusic.com*'))) { return 'PROXY http://einsvonzwei.de:8080; PROXY http://zweivonzwei.de:8080' } else if ((host == 'www.google.com') || (host == 'another.com')) { return 'PROXY http://anothercountry.de:8080' } else { return 'DIRECT'; }}"
+        expectedConfig = "function FindProxyForURL(url, host) {if ((url.indexOf('vevo.com') != -1 && url.indexOf('vevo2.com') != -1) || (shExpMatch(url, 'http://www.beatsmusic.com*'))) { return 'PROXY einsvonzwei.de:8080; PROXY zweivonzwei.de:8080' } else if ((host == 'www.google.com') || (host == 'another.com')) { return 'PROXY anothercountry.de:8080' } else { return 'DIRECT'; }}"
         assert.equal(expectedConfig, actualConfig)
 
         # Count if the scrumbleServers got called the right amount of times
