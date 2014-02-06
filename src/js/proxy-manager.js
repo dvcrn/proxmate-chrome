@@ -101,7 +101,6 @@
           data: pacScript
         }
       };
-      console.info(pacScript);
       return Chrome.proxy.settings.set({
         value: config,
         scope: 'regular'

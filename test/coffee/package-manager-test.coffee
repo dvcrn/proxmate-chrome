@@ -1,50 +1,35 @@
-define 'StorageMock', ->
-  return {
-    get: (key) ->
-      return {
-        'somethingThatsUpToDate': 2,
-        'somethingOutdated': 1,
-        'somethingWithoutUpdate': 1,
-        'somethingElseOutdated': 2,
-      }
-
-    set: (key, val) ->
-
-  }
-
-define 'ConfigMock', ->
-  return {
-    get: (key) ->
-      return 'www.abc.de'
-  }
-
-require.config
-  map:
-    'package-manager':
-      'storage': 'StorageMock',
-      'config': 'ConfigMock'
-
 define [
   'package-manager',
-  'StorageMock',
+  'storage',
+  'config',
   'text!../testdata/packages.json',
   'text!../testdata/servers.json'
-], (PackageManager, StorageMock, testPackages, testServers) ->
+], (PackageManager, Storage, Config, testPackages, testServers) ->
   testServers = JSON.parse(testServers)
   testPackages = JSON.parse(testPackages)
 
   describe 'Package Manager', ->
     beforeEach ->
-      requests = this.requests = [];
-      this.xhr = sinon.useFakeXMLHttpRequest()
-      this.xhr.onCreate = (xhr) ->
-        requests.push xhr
+      this.sandbox = sinon.sandbox.create()
 
-    after ->
-      require.undef('StorageMock')
-      require.undef('ConfigMock')
-      require.config({map: {}})
-      this.xhr.restore()
+      this.storageGetStub = this.sandbox.stub(Storage, 'get', ->
+        return {
+          'somethingThatsUpToDate': 2,
+          'somethingOutdated': 1,
+          'somethingWithoutUpdate': 1,
+          'somethingElseOutdated': 2,
+        }
+      )
+      this.storageSetStub = this.sandbox.stub(Storage, 'set')
+
+      this.sandbox.stub(Config, 'get', ->
+        return 'www.abc.de'
+      )
+
+      this.xhr = this.sandbox.useFakeXMLHttpRequest()
+
+    afterEach ->
+      this.sandbox.restore()
 
     describe 'The update behaviour', ->
       # Restore all stubs back to normal after each test
@@ -54,12 +39,12 @@ define [
             PackageManager[key].restore()
 
       it 'should checkForUpdates on init', ->
-        spy = sinon.stub(PackageManager, 'checkForUpdates')
+        spy = this.sandbox.stub(PackageManager, 'checkForUpdates')
         PackageManager.init()
         assert.isTrue(spy.calledOnce)
 
       it 'should download the version overview and execute callback', ->
-        callback = sinon.spy();
+        callback = this.sandbox.spy()
         PackageManager.downloadVersionRepository(callback)
 
         expectedPayload = {
@@ -67,9 +52,9 @@ define [
           "anotherrandomID": 2
         }
 
-        assert.equal(1, this.requests.length)
-        assert.equal('www.abc.de/api/package/update.json', this.requests[0].url)
-        this.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(expectedPayload))
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal('www.abc.de/api/package/update.json', this.sandbox.server.requests[0].url)
+        this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(expectedPayload))
 
         assert.isTrue(callback.calledWith(expectedPayload))
 
@@ -80,12 +65,12 @@ define [
           'somethingElseOutdated': 3
         }
 
-        downloadVersionRepositoryStub = sinon.stub(PackageManager, "downloadVersionRepository", (callback) ->
+        downloadVersionRepositoryStub = this.sandbox.stub(PackageManager, "downloadVersionRepository", (callback) ->
           callback testVersionJson
         )
 
         # InstalledPackage should get called after finding outdated packages
-        installPackageStub = sinon.stub(PackageManager, "installPackage")
+        installPackageStub = this.sandbox.stub(PackageManager, "installPackage")
 
         PackageManager.checkForUpdates()
         assert.isTrue(downloadVersionRepositoryStub.calledOnce)
@@ -106,32 +91,28 @@ define [
           'somethingElseOutdated': 2,
         }
 
-        StorageSetMock = sinon.stub(StorageMock, 'set')
-        StorageGetMock = sinon.spy(StorageMock, 'get')
-
         PackageManager.installPackage(pkgId)
 
-        assert.equal(1, this.requests.length)
-        assert.equal("www.abc.de/api/package/#{pkgId}.json", this.requests[0].url)
-        this.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal("www.abc.de/api/package/#{pkgId}.json", this.sandbox.server.requests[0].url)
+        this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
 
-        assert.isTrue(StorageGetMock.calledOnce)
-        assert.isTrue(StorageSetMock.calledTwice)
+        assert.isTrue(this.storageGetStub.calledOnce)
+        assert.isTrue(this.storageSetStub.calledTwice)
 
-        assert.isTrue(StorageGetMock.calledWith('installed_packages'))
+        assert.isTrue(this.storageGetStub.calledWith('installed_packages'))
 
-        assert.isTrue(StorageSetMock.calledWith(pkgId, pkgInfo), 'The Storage got called with the correct ID and payload')
-        assert.isTrue(StorageSetMock.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array')
-
-        StorageSetMock.restore()
-        StorageGetMock.restore()
+        assert.isTrue(this.storageSetStub.calledWith(pkgId, pkgInfo), 'The Storage got called with the correct ID and payload')
+        assert.isTrue(this.storageSetStub.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array')
 
     describe 'Basic functionality', ->
 
       it 'should retrieve all installed packages', ->
         expectedJson = testPackages
 
-        StorageGetMock = sinon.stub(StorageMock, 'get', (key) ->
+        # We need different functionality for get this time, so restore the old one
+        this.storageGetStub.restore()
+        StorageGetMock = this.sandbox.stub(Storage, 'get', (key) ->
           switch key
             when 'installed_packages'
               ids = {}

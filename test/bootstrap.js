@@ -12,6 +12,21 @@
     }
   }
 
+  window.chrome = {
+    storage: {
+      local: {
+        set: function() {},
+        get: function() {}
+      }
+    },
+    proxy: {
+      settings: {
+        set: function() {},
+        clear: function() {}
+      }
+    }
+  };
+
   require.config({
     baseUrl: '/base/src/js',
     paths: {

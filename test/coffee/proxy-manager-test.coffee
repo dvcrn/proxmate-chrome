@@ -1,21 +1,17 @@
-define 'ChromeProxyMock', ->
-  return {
-    proxy:
-      settings:
-        set: ->
-        clear: ->
-  }
-
-require.config
-  map:
-    'proxy-manager':
-      'chrome': 'ChromeProxyMock'
-
-define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'text!../testdata/servers.json'], (ProxyManager, Chrome, testPackages, testServers) ->
+define ['proxy-manager', 'chrome', 'text!../testdata/packages.json', 'text!../testdata/servers.json'], (ProxyManager, Chrome, testPackages, testServers) ->
   testServers = JSON.parse(testServers)
   testPackages = JSON.parse(testPackages)
 
   describe 'Proxy Manager', ->
+    beforeEach ->
+      this.sandbox = sinon.sandbox.create()
+
+      this.proxyClearStub = this.sandbox.stub(Chrome.proxy.settings, 'clear')
+      this.proxySetStub = this.sandbox.stub(Chrome.proxy.settings, 'set')
+
+    afterEach ->
+      this.sandbox.restore()
+
     describe 'Script generation', ->
       it 'should generate the correct routing script', ->
         testConfigs = [{
@@ -46,9 +42,9 @@ define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'te
           i += 1
 
       it 'should generate the correct proxy autoconfig', ->
-        parseRoutingConfigSpy = sinon.spy(ProxyManager, 'parseRoutingConfig')
+        parseRoutingConfigSpy = this.sandbox.spy(ProxyManager, 'parseRoutingConfig')
         # We remove the random element and directly join the string, to be able to compare the result
-        generateAndScrumbleServerStringStub = sinon.stub(ProxyManager, 'generateAndScrumbleServerString', (serverArray) ->
+        generateAndScrumbleServerStringStub = this.sandbox.stub(ProxyManager, 'generateAndScrumbleServerString', (serverArray) ->
           return "PROXY #{serverArray.join('; PROXY ')}"
         )
 
@@ -77,7 +73,6 @@ define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'te
 
     describe 'Proxy setting / removing behaviour', ->
       it 'should set the proxy correctly', ->
-        proxySetStub = sinon.stub(Chrome.proxy.settings, 'set')
         proxyString = 'asdf'
 
         expectedPayload =
@@ -89,11 +84,8 @@ define ['proxy-manager', 'ChromeProxyMock','text!../testdata/packages.json', 'te
 
         ProxyManager.setProxyAutoconfig(proxyString)
 
-        assert.isTrue(proxySetStub.calledOnce)
-        assert.isTrue(proxySetStub.calledWith(expectedPayload))
+        assert.isTrue(this.proxySetStub.calledOnce)
+        assert.isTrue(this.proxySetStub.calledWith(expectedPayload))
 
-        proxyClearStub = sinon.stub(Chrome.proxy.settings, 'clear')
         ProxyManager.clearProxy()
-        assert.isTrue(proxyClearStub.calledOnce)
-
-
+        assert.isTrue(this.proxyClearStub.calledOnce)

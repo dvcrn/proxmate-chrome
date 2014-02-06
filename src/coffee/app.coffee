@@ -23,7 +23,6 @@ require.config
       ProxyManager.init()
 
       packages = PackageManager.getInstalledPackages()
-      console.info packages
       pac = ProxyManager.generateProxyAutoconfigScript(packages)
       # console.info pac
       # ProxyManager.setProxyAutoconfig(pac)

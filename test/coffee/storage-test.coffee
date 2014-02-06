@@ -1,25 +1,16 @@
-# Mock for chrome dependency
-
-define 'ChromeMock', ->
-  return {
-    storage:
-      local:
-        set: (obj) ->
-        get: (key, callback) ->
-  }
-
-require.config
-  map:
-    'storage':
-      'chrome': 'ChromeMock'
-
 # The testsuite
-define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
+define ['storage', 'chrome'], (StorageModule, Chrome) ->
   describe 'Storage', ->
 
-    after ->
-      require.config({map: {}})
-      require.undef('ChromeMock')
+    beforeEach ->
+      this.sandbox = sinon.sandbox.create()
+      this.storageSetStub = this.sandbox.stub(Chrome.storage.local, 'set')
+      this.storageGetStub = this.sandbox.stub(Chrome.storage.local, 'get')
+
+      this.clock = this.sandbox.useFakeTimers()
+
+    afterEach ->
+      this.sandbox.restore()
 
     # Testing flush first, since it will be used in all other tests here
     describe 'Testing flush', ->
@@ -28,9 +19,6 @@ define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
       assert.equal(null, StorageModule.get('123'))
 
     describe 'Testing get/set', ->
-      beforeEach ->
-        this.clock = sinon.useFakeTimers()
-
       afterEach ->
         StorageModule.flush()
 
@@ -52,19 +40,18 @@ define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
         assert.equal(null, StorageModule.get('abcasdfasdfasdfkasdfjasdf'))
 
       it 'should call chrome.storage.local after 1000 ms', ->
-        spy = sinon.spy(ChromeMock.storage.local, 'set')
         StorageModule.set(123, 'hallo')
         StorageModule.set(456, 'wuhu')
 
         # Check if the storage function has been called alrady
-        assert.isFalse(spy.calledOnce)
+        assert.isFalse(this.storageSetStub.calledOnce)
 
         this.clock.tick(1000)
         expectedPayload =
           123: 'hallo'
           456: 'wuhu'
 
-        assert.isTrue(spy.calledWith(expectedPayload))
+        assert.isTrue(this.storageSetStub.calledWith(expectedPayload))
 
       it 'should sync chrome storage on init into RAM', ->
         expectedStorageContent =
@@ -72,11 +59,12 @@ define ['storage', 'ChromeMock'], (StorageModule, ChromeMock) ->
           'asdf': 'muh'
           8888: 9999999
 
-        stub = sinon.stub(ChromeMock.storage.local, 'get', (key, callback) ->
+        this.storageGetStub.restore()
+        stub = this.sandbox.stub(Chrome.storage.local, 'get', (key, callback) ->
           callback expectedStorageContent
         )
 
-        callback = sinon.spy()
+        callback = this.sandbox.spy()
         StorageModule.init(callback)
 
         assert.isTrue(callback.calledOnce, 'Callback executed correctly')

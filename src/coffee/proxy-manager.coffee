@@ -91,8 +91,6 @@ define ['chrome'], (Chrome) ->
         pacScript:
           data: pacScript
 
-    console.info pacScript
-
     Chrome.proxy.settings.set({
       value: config,
       scope: 'regular'

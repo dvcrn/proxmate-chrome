@@ -15,7 +15,6 @@
         PackageManager.init();
         ProxyManager.init();
         packages = PackageManager.getInstalledPackages();
-        console.info(packages);
         return pac = ProxyManager.generateProxyAutoconfigScript(packages);
       });
     });
