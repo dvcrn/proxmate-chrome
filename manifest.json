@@ -29,6 +29,7 @@
     "*://*/",
     "tabs",
     "webNavigation",
-    "storage"
+    "storage",
+    "notifications"
   ]
 }
