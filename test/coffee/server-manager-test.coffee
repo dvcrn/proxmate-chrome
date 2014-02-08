@@ -14,7 +14,7 @@ define ['server-manager', 'config', 'storage', 'text!../testdata/servers.json'],
       this.sandbox.restore()
 
     describe 'Initialisation', ->
-      it 'should generate the intern server array correctly', ->
+      it 'should initialise the manager correctly', ->
 
         loadServersSpy = this.sandbox.spy(ServerManager, 'loadServersFromStorage')
         fetchServersStub = this.sandbox.stub(ServerManager, 'fetchServerList')
@@ -24,7 +24,7 @@ define ['server-manager', 'config', 'storage', 'text!../testdata/servers.json'],
 
         # First test - We have servers in storage, don't call fetchServerList
         assert.isTrue(loadServersSpy.calledOnce)
-        assert.isFalse(fetchServersStub.called)
+        assert.isTrue(fetchServersStub.called)
         assert.isTrue(callback.calledOnce)
 
         # Second test, this time no servers will get returned from the storage.
@@ -62,24 +62,28 @@ define ['server-manager', 'config', 'storage', 'text!../testdata/servers.json'],
         servers = ServerManager.loadServersFromStorage()
         assert.deepEqual([], servers)
 
-      it 'should retrieve servers correctly', ->
+      it 'should return servers correctly', ->
         ServerManager.loadServersFromStorage()
         servers = ServerManager.getServers()
 
         assert.deepEqual(testServers, servers)
 
-      it 'should ajax load the server list correctly', ->
+      it 'should ajax load the server list correctly and save in storage', ->
           configGetStub = this.sandbox.stub(Config, 'get', ->
             return 'www.abc.de'
           )
 
           callback = this.sandbox.spy()
-          ServerManager.fetchServerList(callback)
-          assert.isTrue(configGetStub.calledWith('primary_server'))
+          storageSetStub = this.sandbox.stub(Storage, 'set')
 
+          ServerManager.fetchServerList(callback)
+
+          assert.isTrue(configGetStub.calledWith('primary_server'))
           assert.equal(1, this.sandbox.server.requests.length)
           assert.equal("www.abc.de/api/server/list.json", this.sandbox.server.requests[0].url)
 
           this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
 
           assert.isTrue(callback.calledOnce)
+          assert.isTrue(storageSetStub.calledWith('server_config', testServers))
+          assert.deepEqual(testServers, ServerManager.getServers())

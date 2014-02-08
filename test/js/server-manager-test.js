@@ -14,14 +14,14 @@
         return this.sandbox.restore();
       });
       return describe('Initialisation', function() {
-        it('should generate the intern server array correctly', function() {
+        it('should initialise the manager correctly', function() {
           var callback, fetchServersStub, loadServersSpy;
           loadServersSpy = this.sandbox.spy(ServerManager, 'loadServersFromStorage');
           fetchServersStub = this.sandbox.stub(ServerManager, 'fetchServerList');
           callback = this.sandbox.spy();
           ServerManager.init(callback);
           assert.isTrue(loadServersSpy.calledOnce);
-          assert.isFalse(fetchServersStub.called);
+          assert.isTrue(fetchServersStub.called);
           assert.isTrue(callback.calledOnce);
           loadServersSpy.restore();
           loadServersSpy = this.sandbox.spy(ServerManager, 'loadServersFromStorage');
@@ -50,18 +50,19 @@
           servers = ServerManager.loadServersFromStorage();
           return assert.deepEqual([], servers);
         });
-        it('should retrieve servers correctly', function() {
+        it('should return servers correctly', function() {
           var servers;
           ServerManager.loadServersFromStorage();
           servers = ServerManager.getServers();
           return assert.deepEqual(testServers, servers);
         });
-        return it('should ajax load the server list correctly', function() {
-          var callback, configGetStub;
+        return it('should ajax load the server list correctly and save in storage', function() {
+          var callback, configGetStub, storageSetStub;
           configGetStub = this.sandbox.stub(Config, 'get', function() {
             return 'www.abc.de';
           });
           callback = this.sandbox.spy();
+          storageSetStub = this.sandbox.stub(Storage, 'set');
           ServerManager.fetchServerList(callback);
           assert.isTrue(configGetStub.calledWith('primary_server'));
           assert.equal(1, this.sandbox.server.requests.length);
@@ -69,7 +70,9 @@
           this.sandbox.server.requests[0].respond(200, {
             'Content-Type': 'application/json'
           }, JSON.stringify(testServers));
-          return assert.isTrue(callback.calledOnce);
+          assert.isTrue(callback.calledOnce);
+          assert.isTrue(storageSetStub.calledWith('server_config', testServers));
+          return assert.deepEqual(testServers, ServerManager.getServers());
         });
       });
     });

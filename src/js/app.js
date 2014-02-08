@@ -8,14 +8,18 @@
   });
 
   (function() {
-    return require(['config', 'package-manager', 'storage', 'proxy-manager'], function(Config, PackageManager, Storage, ProxyManager) {
+    return require(['config', 'package-manager', 'storage', 'proxy-manager', 'server-manager'], function(Config, PackageManager, Storage, ProxyManager, ServerManager) {
       Config.init();
       return Storage.init(function() {
-        var pac, packages;
-        PackageManager.init();
-        ProxyManager.init();
-        packages = PackageManager.getInstalledPackages();
-        return pac = ProxyManager.generateProxyAutoconfigScript(packages);
+        return ServerManager.init(function() {
+          var pac, packages, servers;
+          PackageManager.init();
+          ProxyManager.init();
+          packages = PackageManager.getInstalledPackages();
+          servers = ServerManager.getServers();
+          pac = ProxyManager.generateProxyAutoconfigScript(packages, servers);
+          return ProxyManager.setProxyAutoconfig(pac);
+        });
       });
     });
   })();

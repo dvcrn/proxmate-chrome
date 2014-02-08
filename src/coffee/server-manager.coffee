@@ -6,6 +6,7 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
 
     if servers.length > 0
       callback()
+      exports.fetchServerList(->)
     else
       exports.fetchServerList(callback)
 
@@ -14,7 +15,7 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
   ###
   loadServersFromStorage = ->
     tmpServers = Storage.get('server_config')
-    if tmpServers is null
+    if !tmpServers
       tmpServers = []
 
     servers = tmpServers
@@ -27,6 +28,7 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
   fetchServerList = (callback) ->
     $.get(Config.get('primary_server') + '/api/server/list.json', (data) ->
       @servers = data
+      Storage.set('server_config', @servers)
       callback()
     )
 

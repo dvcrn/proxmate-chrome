@@ -15,4 +15,7 @@ define [], ->
         clear: chrome.proxy.settings.clear
   }
 
-  return exports
+  if chrome.app
+    return chrome
+  else
+    return exports

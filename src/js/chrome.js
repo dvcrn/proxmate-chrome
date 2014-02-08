@@ -18,7 +18,11 @@
         }
       }
     };
-    return exports;
+    if (chrome.app) {
+      return chrome;
+    } else {
+      return exports;
+    }
   });
 
 }).call(this);
