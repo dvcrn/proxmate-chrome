@@ -2,12 +2,9 @@
   {
     "name": "Test Package 1",
     "version": 1,
-    "url": "http://pandora.com",
-    "user": "52e51a98217d32e2270e211f",
+    "pageUrl": "http://pandora.com",
     "country": "52e5c40294ed6bd4032daa49",
     "_id": "anotherid",
-    "__v": 0,
-    "createdAt": "2014-01-27T02:34:06.874Z",
     "routing": [
       {
         "startsWith": "",
@@ -26,12 +23,9 @@
   {
     "name": "Test Package 2",
     "version": 2,
-    "url": "http://pandora.com",
-    "user": "52e51a98217d32e2270e211f",
+    "pageUrl": "http://pandora.com",
     "country": "52e5c40294ed6bd4032daa49",
     "_id": "1234",
-    "__v": 0,
-    "createdAt": "2014-01-27T02:34:06.874Z",
     "routing": [
       {
         "startsWith": "http://www.beatsmusic.com",
