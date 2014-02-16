@@ -66,7 +66,7 @@
           ServerManager.fetchServerList(callback);
           assert.isTrue(configGetStub.calledWith('primary_server'));
           assert.equal(1, this.sandbox.server.requests.length);
-          assert.equal("www.abc.de/api/server/list.json", this.sandbox.server.requests[0].url);
+          assert.equal("www.abc.de/server/list.json", this.sandbox.server.requests[0].url);
           this.sandbox.server.requests[0].respond(200, {
             'Content-Type': 'application/json'
           }, JSON.stringify(testServers));

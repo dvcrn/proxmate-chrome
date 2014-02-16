@@ -1,10 +1,10 @@
 require.config
-	paths:
+    paths:
     "text" : "../../bower_components/requirejs-text/text"
     "jquery" : "../../bower_components/jquery/jquery"
 
 (->
-	require([
+    require([
     'config',
     'package-manager',
     'storage',
@@ -28,8 +28,11 @@ require.config
         packages = PackageManager.getInstalledPackages()
         servers = ServerManager.getServers()
 
-        pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
-        ProxyManager.setProxyAutoconfig(pac)
+        if !packages or !servers
+            pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
+            ProxyManager.setProxyAutoconfig(pac)
+        else
+            console.info 'No servers and packages'
       )
     )
   )

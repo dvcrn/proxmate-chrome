@@ -31,7 +31,7 @@
      * @param  {Function} callback Callback
      */
     fetchServerList = function(callback) {
-      return $.get(Config.get('primary_server') + '/api/server/list.json', function(data) {
+      return $.get(Config.get('primary_server') + '/server/list.json', function(data) {
         this.servers = data;
         Storage.set('server_config', this.servers);
         return callback();

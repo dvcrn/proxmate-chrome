@@ -17,8 +17,12 @@
           ProxyManager.init();
           packages = PackageManager.getInstalledPackages();
           servers = ServerManager.getServers();
-          pac = ProxyManager.generateProxyAutoconfigScript(packages, servers);
-          return ProxyManager.setProxyAutoconfig(pac);
+          if (!packages || !servers) {
+            pac = ProxyManager.generateProxyAutoconfigScript(packages, servers);
+            return ProxyManager.setProxyAutoconfig(pac);
+          } else {
+            return console.info('No servers and packages');
+          }
         });
       });
     });

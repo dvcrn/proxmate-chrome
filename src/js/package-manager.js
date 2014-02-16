@@ -13,7 +13,7 @@
     downloadVersionRepository = function(callback) {
       var server, updateUrl;
       server = ConfigProvider.get('primary_server');
-      updateUrl = "" + server + "/api/package/update.json";
+      updateUrl = "" + server + "/package/update.json";
       return $.get(updateUrl, function(data) {
         return callback(data);
       });
@@ -50,7 +50,7 @@
     installPackage = function(key) {
       var packageUrl, server;
       server = ConfigProvider.get('primary_server');
-      packageUrl = "" + server + "/api/package/" + key + ".json";
+      packageUrl = "" + server + "/package/" + key + ".json";
       return $.get(packageUrl, function(packageData) {
         var installedPackages;
         installedPackages = StorageManager.get('installed_packages');

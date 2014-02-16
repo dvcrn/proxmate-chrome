@@ -26,7 +26,7 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
    * @param  {Function} callback Callback
   ###
   fetchServerList = (callback) ->
-    $.get(Config.get('primary_server') + '/api/server/list.json', (data) ->
+    $.get(Config.get('primary_server') + '/server/list.json', (data) ->
       @servers = data
       Storage.set('server_config', @servers)
       callback()

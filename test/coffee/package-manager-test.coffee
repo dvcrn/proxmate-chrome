@@ -53,7 +53,7 @@ define [
         }
 
         assert.equal(1, this.sandbox.server.requests.length)
-        assert.equal('www.abc.de/api/package/update.json', this.sandbox.server.requests[0].url)
+        assert.equal('www.abc.de/package/update.json', this.sandbox.server.requests[0].url)
         this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(expectedPayload))
 
         assert.isTrue(callback.calledWith(expectedPayload))
@@ -94,7 +94,7 @@ define [
         PackageManager.installPackage(pkgId)
 
         assert.equal(1, this.sandbox.server.requests.length)
-        assert.equal("www.abc.de/api/package/#{pkgId}.json", this.sandbox.server.requests[0].url)
+        assert.equal("www.abc.de/package/#{pkgId}.json", this.sandbox.server.requests[0].url)
         this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
 
         assert.isTrue(this.storageGetStub.calledOnce)

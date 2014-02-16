@@ -8,7 +8,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
   ###
   downloadVersionRepository = (callback) ->
     server = ConfigProvider.get('primary_server')
-    updateUrl = "#{server}/api/package/update.json"
+    updateUrl = "#{server}/package/update.json"
 
     $.get updateUrl, (data) ->
       callback(data)
@@ -32,7 +32,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
   ###
   installPackage = (key) ->
     server = ConfigProvider.get('primary_server')
-    packageUrl = "#{server}/api/package/#{key}.json"
+    packageUrl = "#{server}/package/#{key}.json"
     $.get packageUrl, (packageData) ->
       # Query existing installed packages and add the new version / id
       installedPackages = StorageManager.get('installed_packages')
