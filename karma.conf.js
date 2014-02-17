@@ -16,10 +16,11 @@ module.exports = function(config) {
     files: [
       'test/bootstrap.js',
 
-      {pattern: 'bower_components/jquery/jquery.js', included: false},
       {pattern: 'test/js/*-test.js', included: false},
       {pattern: 'src/js/*.js', included: false},
       {pattern: 'test/testdata/**/*.json', included: false},
+
+      {pattern: 'bower_components/jquery/dist/jquery.js', included: false},
       {pattern: 'bower_components/requirejs-text/text.js', included: false}
     ],
 

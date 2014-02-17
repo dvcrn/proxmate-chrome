@@ -31,7 +31,7 @@
     baseUrl: '/base/src/js',
     paths: {
       "text": "../../bower_components/requirejs-text/text",
-      "jquery": "../../bower_components/jquery/jquery"
+      "jquery": "../../bower_components/jquery/dist/jquery"
     },
     deps: deps,
     callback: window.__karma__.start

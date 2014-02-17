@@ -19,7 +19,7 @@ require.config
   baseUrl: '/base/src/js'
   paths:
     "text": "../../bower_components/requirejs-text/text"
-    "jquery": "../../bower_components/jquery/jquery"
+    "jquery": "../../bower_components/jquery/dist/jquery"
 
   # load all tests
   deps: deps
