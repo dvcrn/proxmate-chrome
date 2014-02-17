@@ -10,7 +10,10 @@
       var InstallCtrl;
       scope = $rootScope.$new();
       return InstallCtrl = $controller('InstallCtrl', {
-        $scope: scope
+        $scope: scope,
+        $routeParams: {
+          'id': 123
+        }
       });
     }));
     return it('should attach a list of awesomeThings to the scope', function() {

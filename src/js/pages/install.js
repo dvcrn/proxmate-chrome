@@ -17,8 +17,8 @@
   angular.module('proxmateApp').controller('MainCtrl', ['$scope', '$route', '$routeParams', function($scope) {}]);
 
   angular.module('proxmateApp').controller('InstallCtrl', [
-    '$scope', '$route', '$routeParams', function($scope, $route, $routeParams) {
-      return $scope.asdf = 123;
+    '$scope', 'chrome', '$routeParams', function($scope, chrome, $routeParams) {
+      return $scope.asdf = $routeParams.id;
     }
   ]);
 

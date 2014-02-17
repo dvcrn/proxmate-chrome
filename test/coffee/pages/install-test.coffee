@@ -13,6 +13,9 @@ describe 'Controller: InstallCtrl', () ->
     scope = $rootScope.$new()
     InstallCtrl = $controller 'InstallCtrl', {
       $scope: scope
+      $routeParams: {
+        'id': 123
+      }
     }
 
   it 'should attach a list of awesomeThings to the scope', () ->
