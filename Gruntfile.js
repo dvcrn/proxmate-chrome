@@ -2,8 +2,12 @@ module.exports = function (grunt) {
     grunt.initConfig({
         manifest: grunt.file.readJSON('manifest.json'),
         karma: {
-            unit: {
+            backend: {
                 configFile: 'karma.conf.js',
+                singleRun: true,
+            },
+            frontend: {
+                configFile: 'karma-frontend.conf.js',
                 singleRun: true,
             }
         },

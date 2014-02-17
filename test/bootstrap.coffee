@@ -1,7 +1,7 @@
-tests = []
+deps = []
 for file in Object.keys(window.__karma__.files)
   if /test\.js$/.test(file)
-    tests.push file
+    deps.push file
 
 # Overwrite chrome object
 window.chrome =
@@ -22,7 +22,7 @@ require.config
     "jquery": "../../bower_components/jquery/jquery"
 
   # load all tests
-  deps: tests
+  deps: deps
 
   # kick off karma
   callback: window.__karma__.start

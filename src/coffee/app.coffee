@@ -1,10 +1,10 @@
 require.config
-    paths:
+  paths:
     "text" : "../../bower_components/requirejs-text/text"
     "jquery" : "../../bower_components/jquery/jquery"
 
 (->
-    require([
+  require([
     'config',
     'package-manager',
     'storage',
@@ -35,5 +35,5 @@ require.config
             console.info 'No servers and packages'
       )
     )
-  )
+)
 )()
