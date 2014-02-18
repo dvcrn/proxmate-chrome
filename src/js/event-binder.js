@@ -5,6 +5,14 @@
     init = function() {
       return Chrome.runtime.onMessage.addListener(exports.messageListener);
     };
+
+    /**
+     * Event listener for chrome message events
+     * @param  {Object} request      request and parameters
+     * @param  {Object} sender       sender object
+     * @param  {Function} sendResponse callback to emit answer back to frontend
+     * @return {boolean}              status whether to keep the connection open or not
+     */
     messageListener = function(request, sender, sendResponse) {
       var params;
       params = request.params;

@@ -10,14 +10,16 @@ require.config
     'storage',
     'proxy-manager',
     'server-manager',
-    'event-binder'
+    'event-binder',
+    'runtime'
   ], (
     Config,
     PackageManager,
     Storage,
     ProxyManager,
     ServerManager,
-    EventBinder
+    EventBinder,
+    Runtime
   ) ->
     Config.init()
     # Storage is built on top of asynchronous chrome.storage code.
@@ -27,15 +29,9 @@ require.config
         PackageManager.init()
         ProxyManager.init()
         EventBinder.init()
+        Runtime.init()
 
-        packages = PackageManager.getInstalledPackages()
-        servers = ServerManager.getServers()
-
-        if !packages or !servers
-            pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
-            ProxyManager.setProxyAutoconfig(pac)
-        else
-            console.info 'No servers and packages'
+        Runtime.start()
       )
     )
 )
