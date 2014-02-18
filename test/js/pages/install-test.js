@@ -2,26 +2,30 @@
 (function() {
   'use strict';
   describe('Controller: InstallCtrl', function() {
-    var MainCtrl, chromeSpy, scope;
+    var MainCtrl, controller, scope;
     beforeEach(module('proxmateApp'));
     MainCtrl = {};
     scope = {};
-    chromeSpy = jasmine.createSpyObj('chrome', ['installPackage']);
-    chromeSpy.installPackage.andCallFake(function(config, callback) {
-      return callback('some callback string');
-    });
+    controller = {};
     beforeEach(inject(function($controller, $rootScope) {
-      var InstallCtrl;
       scope = $rootScope.$new();
-      return InstallCtrl = $controller('InstallCtrl', {
+      return controller = $controller;
+    }));
+    return it('should call installPackage and indicate the status', function() {
+      var InstallCtrl, chromeSpy;
+      chromeSpy = jasmine.createSpyObj('chrome', ['installPackage']);
+      chromeSpy.installPackage.andCallFake(function(config, callback) {
+        return callback({
+          success: true
+        });
+      });
+      InstallCtrl = controller('InstallCtrl', {
         $scope: scope,
         $routeParams: {
           'packageId': 123
         },
         chrome: chromeSpy
       });
-    }));
-    return it('should attach a list of awesomeThings to the scope', function() {
       expect(scope.status).toBe('Installed successfully!');
       return expect(chromeSpy.installPackage).toHaveBeenCalledWith(123, jasmine.any(Function));
     });

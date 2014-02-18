@@ -7,16 +7,20 @@ describe 'Controller: InstallCtrl', () ->
 
   MainCtrl = {}
   scope = {}
-  chromeSpy = jasmine.createSpyObj('chrome', ['installPackage'])
-  chromeSpy.installPackage.andCallFake((config, callback) ->
-    callback 'some callback string'
-  )
+  controller = {}
 
   # Initialize the controller and a mock scope
   beforeEach inject ($controller, $rootScope) ->
     scope = $rootScope.$new()
+    controller = $controller
 
-    InstallCtrl = $controller 'InstallCtrl', {
+  it 'should call installPackage and indicate the status', () ->
+    chromeSpy = jasmine.createSpyObj('chrome', ['installPackage'])
+    chromeSpy.installPackage.andCallFake((config, callback) ->
+      callback {success: true}
+    )
+
+    InstallCtrl = controller 'InstallCtrl', {
       $scope: scope
       $routeParams: {
         'packageId': 123
@@ -24,6 +28,5 @@ describe 'Controller: InstallCtrl', () ->
       chrome: chromeSpy
     }
 
-  it 'should attach a list of awesomeThings to the scope', () ->
     expect(scope.status).toBe 'Installed successfully!'
     expect(chromeSpy.installPackage).toHaveBeenCalledWith(123, jasmine.any(Function))
