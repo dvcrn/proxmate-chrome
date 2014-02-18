@@ -29,17 +29,23 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
   ###*
    * Installs / overrides package for key 'key'
    * @param  {String} key package identifier
+   * @param {Function} callback callback function
   ###
-  installPackage = (key) ->
+  installPackage = (key, callback) ->
     server = ConfigProvider.get('primary_server')
-    packageUrl = "#{server}/package/#{key}.json"
+    packageUrl = "#{server}/package/#{key}/install.json"
     $.get packageUrl, (packageData) ->
       # Query existing installed packages and add the new version / id
       installedPackages = StorageManager.get('installed_packages')
+      if not installedPackages
+        installedPackages = {}
+
       installedPackages[key] = packageData['version']
 
       StorageManager.set(key, packageData)
       StorageManager.set('installed_packages', installedPackages)
+
+      callback({success: true})
 
   ###*
    * Returns all installed packages with their package contents

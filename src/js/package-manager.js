@@ -46,17 +46,24 @@
     /**
      * Installs / overrides package for key 'key'
      * @param  {String} key package identifier
+     * @param {Function} callback callback function
      */
-    installPackage = function(key) {
+    installPackage = function(key, callback) {
       var packageUrl, server;
       server = ConfigProvider.get('primary_server');
-      packageUrl = "" + server + "/package/" + key + ".json";
+      packageUrl = "" + server + "/package/" + key + "/install.json";
       return $.get(packageUrl, function(packageData) {
         var installedPackages;
         installedPackages = StorageManager.get('installed_packages');
+        if (!installedPackages) {
+          installedPackages = {};
+        }
         installedPackages[key] = packageData['version'];
         StorageManager.set(key, packageData);
-        return StorageManager.set('installed_packages', installedPackages);
+        StorageManager.set('installed_packages', installedPackages);
+        return callback({
+          success: true
+        });
       });
     };
 

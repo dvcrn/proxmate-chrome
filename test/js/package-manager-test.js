@@ -78,7 +78,7 @@
       });
       describe('Installation behaviour', function() {
         return it('should download package information from server', function() {
-          var newInstalledPackageObject, pkgId, pkgInfo;
+          var callback, newInstalledPackageObject, pkgId, pkgInfo;
           pkgId = 'somethingOutdated';
           pkgInfo = testPackages[0];
           newInstalledPackageObject = {
@@ -87,9 +87,10 @@
             'somethingWithoutUpdate': 1,
             'somethingElseOutdated': 2
           };
-          PackageManager.installPackage(pkgId);
+          callback = this.sandbox.spy();
+          PackageManager.installPackage(pkgId, callback);
           assert.equal(1, this.sandbox.server.requests.length);
-          assert.equal("www.abc.de/package/" + pkgId + ".json", this.sandbox.server.requests[0].url);
+          assert.equal("www.abc.de/package/" + pkgId + "/install.json", this.sandbox.server.requests[0].url);
           this.sandbox.server.requests[0].respond(200, {
             'Content-Type': 'application/json'
           }, JSON.stringify(pkgInfo));
@@ -97,7 +98,10 @@
           assert.isTrue(this.storageSetStub.calledTwice);
           assert.isTrue(this.storageGetStub.calledWith('installed_packages'));
           assert.isTrue(this.storageSetStub.calledWith(pkgId, pkgInfo), 'The Storage got called with the correct ID and payload');
-          return assert.isTrue(this.storageSetStub.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array');
+          assert.isTrue(this.storageSetStub.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array');
+          return assert.isTrue(callback.calledWith({
+            success: true
+          }));
         });
       });
       return describe('Basic functionality', function() {

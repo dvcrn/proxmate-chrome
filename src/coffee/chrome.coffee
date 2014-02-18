@@ -13,6 +13,10 @@ define [], ->
       settings:
         set: chrome.proxy.settings.set
         clear: chrome.proxy.settings.clear
+
+    runtime:
+      onMessage:
+        addListener: chrome.runtime.onMessage.addListener
   }
 
   if chrome.app

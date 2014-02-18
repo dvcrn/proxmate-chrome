@@ -18,7 +18,13 @@
 
   angular.module('proxmateApp').controller('InstallCtrl', [
     '$scope', 'chrome', '$routeParams', function($scope, chrome, $routeParams) {
-      return $scope.asdf = $routeParams.id;
+      $scope.status = 'Installing...';
+      return chrome.installPackage($routeParams.packageId, function(response) {
+        if (response.success) {
+          $scope.status = 'Installed successfully!';
+          return $scope.$digest();
+        }
+      });
     }
   ]);
 

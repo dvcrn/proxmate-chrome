@@ -2,22 +2,28 @@
 (function() {
   'use strict';
   describe('Controller: InstallCtrl', function() {
-    var MainCtrl, scope;
+    var MainCtrl, chromeSpy, scope;
     beforeEach(module('proxmateApp'));
     MainCtrl = {};
     scope = {};
+    chromeSpy = jasmine.createSpyObj('chrome', ['installPackage']);
+    chromeSpy.installPackage.andCallFake(function(config, callback) {
+      return callback('some callback string');
+    });
     beforeEach(inject(function($controller, $rootScope) {
       var InstallCtrl;
       scope = $rootScope.$new();
       return InstallCtrl = $controller('InstallCtrl', {
         $scope: scope,
         $routeParams: {
-          'id': 123
-        }
+          'packageId': 123
+        },
+        chrome: chromeSpy
       });
     }));
     return it('should attach a list of awesomeThings to the scope', function() {
-      return expect(scope.asdf).toBe(123);
+      expect(scope.status).toBe('Installed successfully!');
+      return expect(chromeSpy.installPackage).toHaveBeenCalledWith(123, jasmine.any(Function));
     });
   });
 

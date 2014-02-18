@@ -1,7 +1,7 @@
 require.config
   paths:
     "text" : "../../bower_components/requirejs-text/text"
-    "jquery" : "../../bower_components/jquery/jquery"
+    "jquery" : "../../bower_components/jquery/dist/jquery"
 
 (->
   require([
@@ -9,13 +9,15 @@ require.config
     'package-manager',
     'storage',
     'proxy-manager',
-    'server-manager'
+    'server-manager',
+    'event-binder'
   ], (
     Config,
     PackageManager,
     Storage,
     ProxyManager,
-    ServerManager
+    ServerManager,
+    EventBinder
   ) ->
     Config.init()
     # Storage is built on top of asynchronous chrome.storage code.
@@ -24,6 +26,7 @@ require.config
       ServerManager.init(->
         PackageManager.init()
         ProxyManager.init()
+        EventBinder.init()
 
         packages = PackageManager.getInstalledPackages()
         servers = ServerManager.getServers()

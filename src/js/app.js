@@ -3,18 +3,19 @@
   require.config({
     paths: {
       "text": "../../bower_components/requirejs-text/text",
-      "jquery": "../../bower_components/jquery/jquery"
+      "jquery": "../../bower_components/jquery/dist/jquery"
     }
   });
 
   (function() {
-    return require(['config', 'package-manager', 'storage', 'proxy-manager', 'server-manager'], function(Config, PackageManager, Storage, ProxyManager, ServerManager) {
+    return require(['config', 'package-manager', 'storage', 'proxy-manager', 'server-manager', 'event-binder'], function(Config, PackageManager, Storage, ProxyManager, ServerManager, EventBinder) {
       Config.init();
       return Storage.init(function() {
         return ServerManager.init(function() {
           var pac, packages, servers;
           PackageManager.init();
           ProxyManager.init();
+          EventBinder.init();
           packages = PackageManager.getInstalledPackages();
           servers = ServerManager.getServers();
           if (!packages || !servers) {

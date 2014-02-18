@@ -24,6 +24,11 @@
         set: function() {},
         clear: function() {}
       }
+    },
+    runtime: {
+      onMessage: {
+        addListener: function() {}
+      }
     }
   };
 

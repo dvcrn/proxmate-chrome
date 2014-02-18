@@ -15,6 +15,10 @@ window.chrome =
       set: ->
       clear: ->
 
+  runtime:
+    onMessage:
+      addListener: ->
+
 require.config
   baseUrl: '/base/src/js'
   paths:

@@ -4,6 +4,7 @@
   angular.module('proxmateApp').factory('chrome', function() {
     return {
       installPackage: function(packageId, callback) {
+        console.info("trying to install package " + packageId);
         return chrome.runtime.sendMessage({
           action: "installPackage",
           params: {

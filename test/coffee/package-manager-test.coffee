@@ -91,10 +91,11 @@ define [
           'somethingElseOutdated': 2,
         }
 
-        PackageManager.installPackage(pkgId)
+        callback = this.sandbox.spy()
+        PackageManager.installPackage(pkgId, callback)
 
         assert.equal(1, this.sandbox.server.requests.length)
-        assert.equal("www.abc.de/package/#{pkgId}.json", this.sandbox.server.requests[0].url)
+        assert.equal("www.abc.de/package/#{pkgId}/install.json", this.sandbox.server.requests[0].url)
         this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
 
         assert.isTrue(this.storageGetStub.calledOnce)
@@ -104,6 +105,8 @@ define [
 
         assert.isTrue(this.storageSetStub.calledWith(pkgId, pkgInfo), 'The Storage got called with the correct ID and payload')
         assert.isTrue(this.storageSetStub.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array')
+
+        assert.isTrue(callback.calledWith({success: true}))
 
     describe 'Basic functionality', ->
 
