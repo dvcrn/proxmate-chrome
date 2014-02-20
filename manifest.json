@@ -12,6 +12,14 @@
     "default_icon": "ressources/images/icon128.png"
   },
   "content_scripts": [
+    {
+      "matches": ["*://127.0.0.1/*"],
+      "js": [
+        "bower_components/jquery/dist/jquery.js",
+        "src/js/page-worker/proxmate.me.js"
+      ],
+      "run_at": "document_end"
+    }
   ],
   "icons": {
     "48": "ressources/images/icon48.png",
