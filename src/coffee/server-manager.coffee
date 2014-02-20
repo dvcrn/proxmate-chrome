@@ -5,8 +5,8 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
     exports.loadServersFromStorage()
 
     if servers.length > 0
-      callback()
       exports.fetchServerList(->)
+      callback()
     else
       exports.fetchServerList(callback)
 

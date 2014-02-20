@@ -6,8 +6,8 @@
     init = function(callback) {
       exports.loadServersFromStorage();
       if (servers.length > 0) {
-        callback();
-        return exports.fetchServerList(function() {});
+        exports.fetchServerList(function() {});
+        return callback();
       } else {
         return exports.fetchServerList(callback);
       }
