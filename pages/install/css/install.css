@@ -1,0 +1,35 @@
+body {
+	font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+	background: #eee;
+	color: #222222;
+}
+
+h1 {
+	font-size: 1.6875rem;
+	font-style: normal;
+	font-weight: normal;
+	text-rendering: optimizeLegibility;
+}
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 500px;
+	text-align: center;
+	box-shadow: 0 0 10px #428cc0;
+	border-radius: 1.0em;
+}
+
+header {
+	padding-top: 10px;
+}
+
+.container {
+	line-height: 50px;
+	background: grey;
+	color: white;
+}
+
+footer p {
+	font-size: 15px;
+	line-height: 25px;
+}
