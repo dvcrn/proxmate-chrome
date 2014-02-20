@@ -52,3 +52,9 @@ define [
 
         assert.isTrue(generatePacStub.calledOnce)
         assert.isTrue(setPacStub.calledOnce)
+
+      it 'should call start on restart', ->
+        stub = this.sandbox.stub(Runtime, 'start')
+        Runtime.restart()
+
+        assert.isTrue(stub.calledOnce)

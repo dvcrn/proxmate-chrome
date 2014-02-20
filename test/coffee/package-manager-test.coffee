@@ -3,8 +3,9 @@ define [
   'storage',
   'config',
   'text!../testdata/packages.json',
-  'text!../testdata/servers.json'
-], (PackageManager, Storage, Config, testPackages, testServers) ->
+  'text!../testdata/servers.json',
+  'runtime'
+], (PackageManager, Storage, Config, testPackages, testServers, Runtime) ->
   testServers = JSON.parse(testServers)
   testPackages = JSON.parse(testPackages)
 
@@ -27,6 +28,7 @@ define [
       )
 
       this.xhr = this.sandbox.useFakeXMLHttpRequest()
+      this.runtimeStub = this.sandbox.stub(Runtime, 'restart')
 
     afterEach ->
       this.sandbox.restore()
@@ -107,6 +109,9 @@ define [
         assert.isTrue(this.storageSetStub.calledWith('installed_packages', newInstalledPackageObject), 'The new package ID got added in the installed_packages array')
 
         assert.isTrue(callback.calledWith({success: true}))
+
+        # Check that restart got called
+        assert.isTrue(this.runtimeStub.calledOnce)
 
     describe 'Basic functionality', ->
 

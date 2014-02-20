@@ -61,6 +61,7 @@
         installedPackages[key] = packageData['version'];
         StorageManager.set(key, packageData);
         StorageManager.set('installed_packages', installedPackages);
+        require('runtime').restart();
         return callback({
           success: true
         });

@@ -18,9 +18,16 @@ define [
         pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
         ProxyManager.setProxyAutoconfig(pac)
 
+  ###*
+   * Restarts application flow
+  ###
+  restart = ->
+    exports.start()
+
   exports = {
     init: init,
-    start: start
+    start: start,
+    restart: restart
   }
 
   return exports

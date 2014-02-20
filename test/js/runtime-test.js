@@ -25,7 +25,7 @@
           assert.isFalse(generatePacStub.calledOnce);
           return assert.isFalse(setPacStub.calledOnce);
         });
-        return it('should generate and set pac if packages and servers are available', function() {
+        it('should generate and set pac if packages and servers are available', function() {
           var generatePacStub, getInstalledPackagesStub, getServersStub, setPacStub;
           getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', function() {
             return [1];
@@ -40,6 +40,12 @@
           assert.isTrue(getServersStub.calledOnce);
           assert.isTrue(generatePacStub.calledOnce);
           return assert.isTrue(setPacStub.calledOnce);
+        });
+        return it('should call start on restart', function() {
+          var stub;
+          stub = this.sandbox.stub(Runtime, 'start');
+          Runtime.restart();
+          return assert.isTrue(stub.calledOnce);
         });
       });
     });

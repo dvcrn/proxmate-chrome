@@ -45,6 +45,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
       StorageManager.set(key, packageData)
       StorageManager.set('installed_packages', installedPackages)
 
+      require('runtime').restart()
       callback({success: true})
 
   ###*
