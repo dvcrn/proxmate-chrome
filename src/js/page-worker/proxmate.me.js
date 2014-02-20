@@ -14,7 +14,7 @@
     if (currentHash.indexOf('package/') !== -1) {
       installButton = $('.installbutton');
       installButton.text('Add to ProxMate');
-      installButton.addClass('pxm-connected');
+      installButton.addClass('pxm-installbutton');
       installButton.attr('a', '');
       return installButton.mouseup(function() {
         var packageid;

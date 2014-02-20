@@ -13,7 +13,7 @@ checkHash = ->
     installButton.text('Add to ProxMate')
 
     # add a custom class so we can style on the server side
-    installButton.addClass('pxm-connected')
+    installButton.addClass('pxm-installbutton')
 
     # Remove the link, if any. This script will handle the onClick now
     installButton.attr('a', '')
