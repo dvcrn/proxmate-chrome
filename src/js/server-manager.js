@@ -4,7 +4,7 @@
     var exports, fetchServerList, getServers, init, loadServersFromStorage, servers;
     servers = [];
     init = function(callback) {
-      exports.loadServersFromStorage();
+      servers = exports.loadServersFromStorage();
       if (servers.length > 0) {
         exports.fetchServerList(function() {});
         return callback();
@@ -32,8 +32,8 @@
      */
     fetchServerList = function(callback) {
       return $.get(Config.get('primary_server') + '/server/list.json', function(data) {
-        this.servers = data;
-        Storage.set('server_config', this.servers);
+        servers = data;
+        Storage.set('server_config', servers);
         return callback();
       });
     };
