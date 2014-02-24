@@ -29,6 +29,13 @@ module.exports = function (grunt) {
                 ext: '.js'
             }
         },
+        ngmin: {
+            pages: {
+                files: [
+                    {expand: true, src: ['src/js/pages/**/*.js'], dest: ''},
+                ]
+            }
+        },
         uglify: {
             compress: {
                 options: {
@@ -53,7 +60,6 @@ module.exports = function (grunt) {
                     compress: true
                 },
                 files: {
-                    'dist/bower_components/jquery/jquery.js': 'bower_components/jquery/jquery.js',
                     'dist/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
                     'dist/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js',
                 }
@@ -64,12 +70,24 @@ module.exports = function (grunt) {
                 files: {
                     'dist/manifest.json': 'manifest.json',
                     'dist/proxmate.json': 'proxmate.json',
-                    'dist/background.html': 'background.html',
+                    'dist/background.html': 'background.html'
+                }
+            },
+            vendors: {
+                files: {
+                    'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
+                    'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
+                    'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js'
                 }
             },
             ressources: {
                 files: [
                     {expand: true, src: ['ressources/**'], dest: 'dist/'},
+                ]
+            },
+            pages: {
+                files: [
+                    {expand: true, src: ['pages/**'], dest: 'dist/'},
                 ]
             }
         },
@@ -82,10 +100,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-ngmin');
 
     // Register commands
     grunt.registerTask('test', 'karma');
-    grunt.registerTask('build', ['clean', 'coffee', 'karma', 'copy:main', 'copy:ressources', 'uglify:compress', 'uglify:vendors'])
+    grunt.registerTask('build', ['clean', 'coffee', 'karma', 'copy', 'ngmin', 'uglify:compress', 'uglify:vendors'])
 
     grunt.registerTask('default', 'test');
 };
