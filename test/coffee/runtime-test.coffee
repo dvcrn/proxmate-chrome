@@ -2,8 +2,9 @@ define [
   'runtime'
   'package-manager',
   'server-manager',
-  'proxy-manager'
-], (Runtime, PackageManager, ServerManager, ProxyManager) ->
+  'proxy-manager',
+  'storage'
+], (Runtime, PackageManager, ServerManager, ProxyManager, Storage) ->
 
   describe 'Runtime ', ->
     beforeEach ->
@@ -22,6 +23,11 @@ define [
           return []
         )
 
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key is 'global_status'
+            return true
+        )
+
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
         setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
 
@@ -33,6 +39,32 @@ define [
         assert.isFalse(generatePacStub.calledOnce)
         assert.isFalse(setPacStub.calledOnce)
 
+      it 'should do nothing if global_status is set to false', ->
+        getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
+          return []
+        )
+
+        getServersStub = this.sandbox.stub(ServerManager, 'getServers', ->
+          return []
+        )
+
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key is 'global_status'
+            return false
+        )
+
+        generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
+        setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
+
+        Runtime.start()
+
+        assert.isFalse(getInstalledPackagesStub.calledOnce)
+        assert.isFalse(getServersStub.calledOnce)
+
+        assert.isFalse(generatePacStub.calledOnce)
+        assert.isFalse(setPacStub.calledOnce)
+
+
       it 'should generate and set pac if packages and servers are available', ->
         getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
           return [1]
@@ -40,6 +72,11 @@ define [
 
         getServersStub = this.sandbox.stub(ServerManager, 'getServers', ->
           return [1,2,3]
+        )
+
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key is 'global_status'
+            return true
         )
 
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')

@@ -1,14 +1,19 @@
 define [
   'package-manager',
   'server-manager',
-  'proxy-manager'
-], (PackageManager, ServerManager, ProxyManager) ->
+  'proxy-manager',
+  'storage'
+], (PackageManager, ServerManager, ProxyManager, Storage) ->
   init = ->
 
   ###*
    * Starts the app. Retrieves servers and sets pac
   ###
   start = ->
+    globalStatus = Storage.get('global_status')
+    if not globalStatus
+      return
+
     packages = PackageManager.getInstalledPackages()
     servers = ServerManager.getServers()
 

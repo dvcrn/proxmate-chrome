@@ -1,6 +1,14 @@
 define ['chrome'], (Chrome) ->
   init = (callback) ->
-    copyFromChromeStorage(callback)
+    copyFromChromeStorage( ->
+      # If global_status is undefined, ProxMate very likely never got started yet.
+      # In this case, global_status should be true
+      globalStatus = internStorage['global_status']
+      if not globalStatus?
+        internStorage['global_status'] = true
+
+      callback(internStorage)
+    )
 
   # Internal array to keep in ram for faster look ups
   internStorage = {}

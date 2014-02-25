@@ -47,7 +47,7 @@
           };
           return assert.isTrue(this.storageSetStub.calledWith(expectedPayload));
         });
-        return it('should sync chrome storage on init into RAM', function() {
+        return it('should init the module correctly', function() {
           var callback, expectedStorageContent, stub;
           expectedStorageContent = {
             123: 456,
@@ -64,7 +64,8 @@
           assert.isTrue(stub.calledOnce);
           assert.equal(456, StorageModule.get(123));
           assert.equal('muh', StorageModule.get('asdf'));
-          return assert.equal(9999999, StorageModule.get(8888));
+          assert.equal(9999999, StorageModule.get(8888));
+          return assert.equal(true, StorageModule.get('global_status'));
         });
       });
     });

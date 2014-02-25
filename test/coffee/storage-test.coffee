@@ -53,7 +53,7 @@ define ['storage', 'chrome'], (StorageModule, Chrome) ->
 
         assert.isTrue(this.storageSetStub.calledWith(expectedPayload))
 
-      it 'should sync chrome storage on init into RAM', ->
+      it 'should init the module correctly', ->
         expectedStorageContent =
           123: 456
           'asdf': 'muh'
@@ -72,3 +72,6 @@ define ['storage', 'chrome'], (StorageModule, Chrome) ->
         assert.equal(456, StorageModule.get(123))
         assert.equal('muh', StorageModule.get('asdf'))
         assert.equal(9999999, StorageModule.get(8888))
+
+        # If we didn't have global_status in the storage yet, it should be true
+        assert.equal(true, StorageModule.get('global_status'))

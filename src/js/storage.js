@@ -3,7 +3,14 @@
   define(['chrome'], function(Chrome) {
     var copyFromChromeStorage, copyInterval, copyIntoChromeStorage, flush, get, init, internStorage, set;
     init = function(callback) {
-      return copyFromChromeStorage(callback);
+      return copyFromChromeStorage(function() {
+        var globalStatus;
+        globalStatus = internStorage['global_status'];
+        if (globalStatus == null) {
+          internStorage['global_status'] = true;
+        }
+        return callback(internStorage);
+      });
     };
     internStorage = {};
     copyInterval = null;
