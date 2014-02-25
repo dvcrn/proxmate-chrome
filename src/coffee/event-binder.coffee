@@ -1,4 +1,4 @@
-define ['chrome', 'package-manager', 'storage'], (Chrome, PackageManager, Storage) ->
+define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageManager, Storage, Runtime) ->
   init = ->
     Chrome.runtime.onMessage.addListener exports.messageListener
 
@@ -31,6 +31,13 @@ define ['chrome', 'package-manager', 'storage'], (Chrome, PackageManager, Storag
           newStatus = false
 
         Storage.set('global_status', newStatus)
+
+        # Start / Stop ProxMate service if neccesary
+        if newStatus
+          Runtime.start()
+        else
+          Runtime.stop()
+
         sendResponse true
 
     true

@@ -39,7 +39,7 @@ define [
         assert.isFalse(generatePacStub.calledOnce)
         assert.isFalse(setPacStub.calledOnce)
 
-      it 'should do nothing if global_status is set to false', ->
+      it 'should do nothing and call stop() if global_status is set to false', ->
         getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
           return []
         )
@@ -53,6 +53,8 @@ define [
             return false
         )
 
+        stopStub = this.sandbox.stub(Runtime, 'stop')
+
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
         setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
 
@@ -63,6 +65,8 @@ define [
 
         assert.isFalse(generatePacStub.calledOnce)
         assert.isFalse(setPacStub.calledOnce)
+
+        assert.isTrue(stopStub.calledOnce)
 
 
       it 'should generate and set pac if packages and servers are available', ->

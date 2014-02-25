@@ -1,4 +1,4 @@
-define ['event-binder', 'chrome', 'package-manager', 'storage'], (EventBinder, Chrome, PackageManager, Storage) ->
+define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (EventBinder, Chrome, PackageManager, Storage, Runtime) ->
   describe 'Event Binder ', ->
 
     beforeEach ->
@@ -52,11 +52,14 @@ define ['event-binder', 'chrome', 'package-manager', 'storage'], (EventBinder, C
       it 'should set the proxmate status correctly on setProxmateGlobalStatus', ->
         callback = this.sandbox.spy()
         storageSetStub = this.sandbox.stub(Storage, 'set')
+        startStub = this.sandbox.stub(Runtime, 'start')
+        stopStub = this.sandbox.stub(Runtime, 'stop')
 
         # True
         flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: true}}, {}, callback)
         assert.isTrue(storageSetStub.calledWith('global_status', true))
         assert.isTrue(callback.calledOnce)
+        assert.isTrue(startStub.calledOnce)
 
         storageSetStub.restore()
         callback = this.sandbox.spy()
@@ -66,6 +69,7 @@ define ['event-binder', 'chrome', 'package-manager', 'storage'], (EventBinder, C
         flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: false}}, {}, callback)
         assert.isTrue(storageSetStub.calledWith('global_status', false))
         assert.isTrue(callback.calledOnce)
+        assert.isTrue(stopStub.calledOnce)
 
         storageSetStub.restore()
         callback = this.sandbox.spy()
@@ -75,3 +79,4 @@ define ['event-binder', 'chrome', 'package-manager', 'storage'], (EventBinder, C
         flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: 'asdf'}}, {}, callback)
         assert.isTrue(storageSetStub.calledWith('global_status', false))
         assert.isTrue(callback.calledOnce)
+        assert.isTrue(stopStub.calledTwice)

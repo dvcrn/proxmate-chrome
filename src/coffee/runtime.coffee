@@ -12,6 +12,7 @@ define [
   start = ->
     globalStatus = Storage.get('global_status')
     if not globalStatus
+      exports.stop()
       return
 
     packages = PackageManager.getInstalledPackages()
@@ -24,11 +25,14 @@ define [
         ProxyManager.setProxyAutoconfig(pac)
 
   ###*
-   * Restarts application flow
+   * Restarts application flow. This means the app is already running and now getting started again.
   ###
   restart = ->
     exports.start()
 
+  ###*
+   * Removed the proxy from chrome
+  ###
   stop = ->
     ProxyManager.clearProxy()
 

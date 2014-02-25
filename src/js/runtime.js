@@ -11,6 +11,7 @@
       var globalStatus, pac, packages, servers;
       globalStatus = Storage.get('global_status');
       if (!globalStatus) {
+        exports.stop();
         return;
       }
       packages = PackageManager.getInstalledPackages();
@@ -24,11 +25,15 @@
     };
 
     /**
-     * Restarts application flow
+     * Restarts application flow. This means the app is already running and now getting started again.
      */
     restart = function() {
       return exports.start();
     };
+
+    /**
+     * Removed the proxy from chrome
+     */
     stop = function() {
       return ProxyManager.clearProxy();
     };

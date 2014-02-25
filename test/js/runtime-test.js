@@ -30,8 +30,8 @@
           assert.isFalse(generatePacStub.calledOnce);
           return assert.isFalse(setPacStub.calledOnce);
         });
-        it('should do nothing if global_status is set to false', function() {
-          var generatePacStub, getInstalledPackagesStub, getServersStub, setPacStub, storageGetStub;
+        it('should do nothing and call stop() if global_status is set to false', function() {
+          var generatePacStub, getInstalledPackagesStub, getServersStub, setPacStub, stopStub, storageGetStub;
           getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', function() {
             return [];
           });
@@ -43,13 +43,15 @@
               return false;
             }
           });
+          stopStub = this.sandbox.stub(Runtime, 'stop');
           generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript');
           setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig');
           Runtime.start();
           assert.isFalse(getInstalledPackagesStub.calledOnce);
           assert.isFalse(getServersStub.calledOnce);
           assert.isFalse(generatePacStub.calledOnce);
-          return assert.isFalse(setPacStub.calledOnce);
+          assert.isFalse(setPacStub.calledOnce);
+          return assert.isTrue(stopStub.calledOnce);
         });
         it('should generate and set pac if packages and servers are available', function() {
           var generatePacStub, getInstalledPackagesStub, getServersStub, setPacStub, storageGetStub;
