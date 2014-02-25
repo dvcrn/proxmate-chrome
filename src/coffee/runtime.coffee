@@ -29,10 +29,14 @@ define [
   restart = ->
     exports.start()
 
+  stop = ->
+    ProxyManager.clearProxy()
+
   exports = {
-    init: init,
-    start: start,
+    init: init
+    start: start
     restart: restart
+    stop: stop
   }
 
   return exports

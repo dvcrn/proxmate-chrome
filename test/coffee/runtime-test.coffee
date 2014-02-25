@@ -95,3 +95,8 @@ define [
         Runtime.restart()
 
         assert.isTrue(stub.calledOnce)
+
+      it 'should reset the proxy on stop', ->
+        clearProxyStub = this.sandbox.stub(ProxyManager, 'clearProxy')
+        Runtime.stop()
+        assert.isTrue(clearProxyStub.calledOnce)

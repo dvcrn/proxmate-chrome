@@ -72,11 +72,17 @@
           assert.isTrue(generatePacStub.calledOnce);
           return assert.isTrue(setPacStub.calledOnce);
         });
-        return it('should call start on restart', function() {
+        it('should call start on restart', function() {
           var stub;
           stub = this.sandbox.stub(Runtime, 'start');
           Runtime.restart();
           return assert.isTrue(stub.calledOnce);
+        });
+        return it('should reset the proxy on stop', function() {
+          var clearProxyStub;
+          clearProxyStub = this.sandbox.stub(ProxyManager, 'clearProxy');
+          Runtime.stop();
+          return assert.isTrue(clearProxyStub.calledOnce);
         });
       });
     });
