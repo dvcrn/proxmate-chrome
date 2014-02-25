@@ -24,7 +24,7 @@
         $routeParams: {
           'packageId': 123
         },
-        chrome: chromeSpy
+        Chrome: chromeSpy
       });
       expect(scope.status).toBe('Installed successfully!');
       return expect(chromeSpy.installPackage).toHaveBeenCalledWith(123, jasmine.any(Function));

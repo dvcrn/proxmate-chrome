@@ -1,8 +1,8 @@
 {
-  "name": "proxmate-chrome",
+  "name": "ProxMate Next",
   "version": "1.0.0",
   "private": true,
-  "description": "asdf",
+  "description": "ProxMate browser extension",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/grunt test",

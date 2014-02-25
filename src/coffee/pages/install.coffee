@@ -1,7 +1,8 @@
 'use strict'
 
 angular.module('proxmateApp', [
-  'ngRoute'
+  'ngRoute',
+  'chrome'
 ])
   .config ($locationProvider, $routeProvider) ->
     $locationProvider.hashPrefix('!')
@@ -19,10 +20,10 @@ angular.module('proxmateApp')
   .controller 'MainCtrl', ['$scope', '$route', '$routeParams', ($scope) ->]
 
 angular.module('proxmateApp')
-  .controller 'InstallCtrl', ['$scope', 'chrome', '$routeParams', ($scope, chrome, $routeParams) ->
+  .controller 'InstallCtrl', ['$scope', 'Chrome', '$routeParams', ($scope, Chrome, $routeParams) ->
     $scope.status = 'Installing...'
 
-    chrome.installPackage($routeParams.packageId, (response) ->
+    Chrome.installPackage($routeParams.packageId, (response) ->
       if response.success
         $scope.status = 'Installed successfully!'
         $scope.$digest()

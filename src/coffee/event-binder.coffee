@@ -1,4 +1,4 @@
-define ['chrome', 'package-manager'], (Chrome, PackageManager) ->
+define ['chrome', 'package-manager', 'storage'], (Chrome, PackageManager, Storage) ->
   init = ->
     Chrome.runtime.onMessage.addListener exports.messageListener
 
@@ -17,6 +17,21 @@ define ['chrome', 'package-manager'], (Chrome, PackageManager) ->
         PackageManager.installPackage(params.packageId, (response) ->
           sendResponse response
         )
+
+      when 'getProxmateGlobalStatus'
+        status = Storage.get('global_status')
+        if status
+          sendResponse status
+        else
+          sendResponse false
+
+      when 'setProxmateGlobalStatus'
+        newStatus = params.newStatus
+        if typeof newStatus != 'boolean'
+          newStatus = false
+
+        Storage.set('global_status', newStatus)
+        sendResponse true
 
     true
 

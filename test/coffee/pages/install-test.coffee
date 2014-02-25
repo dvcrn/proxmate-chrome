@@ -25,7 +25,7 @@ describe 'Controller: InstallCtrl', () ->
       $routeParams: {
         'packageId': 123
       }
-      chrome: chromeSpy
+      Chrome: chromeSpy
     }
 
     expect(scope.status).toBe 'Installed successfully!'

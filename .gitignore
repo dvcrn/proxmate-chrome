@@ -9,3 +9,6 @@ bower_components/
 codekit-config.json
 app/
 dist/
+*.pem
+
+*.nex

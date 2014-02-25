@@ -3,7 +3,7 @@
   'use strict';
   describe('Factory: chrome', function() {
     var chrome, runtimeSpy;
-    beforeEach(module('proxmateApp'));
+    beforeEach(module('chrome'));
     runtimeSpy = jasmine.createSpyObj('runtime', ['sendMessage']);
     runtimeSpy.sendMessage.andCallFake(function(config, callback) {
       return callback('some callback string');
@@ -12,10 +12,10 @@
       runtime: runtimeSpy
     };
     chrome = {};
-    beforeEach(inject(function(_chrome_) {
-      return chrome = _chrome_;
+    beforeEach(inject(function(_Chrome_) {
+      return chrome = _Chrome_;
     }));
-    return it('should be an object', function() {
+    it('installPackage should create the correct message for backend', function() {
       var callback;
       callback = jasmine.createSpy('callback spy');
       chrome.installPackage(123, callback);
@@ -23,6 +23,37 @@
         action: 'installPackage',
         params: {
           packageId: 123
+        }
+      }, jasmine.any(Function));
+      return expect(callback).toHaveBeenCalledWith('some callback string');
+    });
+    it('getProxmateGlobalStatus should create the correct message for backend', function() {
+      var callback;
+      callback = jasmine.createSpy('callback spy');
+      chrome.getProxmateStatus(callback);
+      expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({
+        action: 'getProxmateGlobalStatus',
+        params: {}
+      }, jasmine.any(Function));
+      return expect(callback).toHaveBeenCalledWith('some callback string');
+    });
+    return it('should create the correct message for activate/deactivate proxmate', function() {
+      var callback;
+      callback = jasmine.createSpy('callback spy');
+      chrome.setProxmateStatus(true, callback);
+      expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({
+        action: 'setProxmateGlobalStatus',
+        params: {
+          newStatus: true
+        }
+      }, jasmine.any(Function));
+      expect(callback).toHaveBeenCalledWith('some callback string');
+      callback = jasmine.createSpy('callback spy');
+      chrome.setProxmateStatus(false, callback);
+      expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({
+        action: 'setProxmateGlobalStatus',
+        params: {
+          newStatus: false
         }
       }, jasmine.any(Function));
       return expect(callback).toHaveBeenCalledWith('some callback string');

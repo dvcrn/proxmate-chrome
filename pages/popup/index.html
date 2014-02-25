@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/popup.css">
+		<script src="../../bower_components/angular/angular.js"></script>
+		<script src="../../bower_components/angular-route/angular-route.js"></script>
+		<script src="../../src/js/pages/popup.js"></script>
+		<script src="../../src/js/pages/services/chrome.js"></script>
+	</head>
+	<body ng-app="popupApp" ng-controller="MainCtrl">
+		<section class="container">
+			<header>
+				<img class="logo" src="../../ressources/images/icon48.png" alt="">
+			</header>
+			<div class="options">
+				<ul>
+					<li ng-show="proxmateStatus" class="option"><a ng-click="deactivateProxmate()" href="#">Disable ProxMate</a></li>
+					<li ng-hide="proxmateStatus" class="option"><a ng-click="activateProxmate()" href="#">Enable ProxMate</a></li>
+					<li class="option"><a target="_blank" href="http://proxmate.me/#!/packages">Browse new Packages</a></li>
+					<li class="option"><a href="#">Options</a></li>
+				</ul>
+			</div>
+			<footer>
+				<p>...thanks for using ProxMate!</p>
+			</footer>
+		</section>
+	</body>
+</html>

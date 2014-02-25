@@ -1,0 +1,50 @@
+body {
+	font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+	background: #eee;
+	color: #222222;
+}
+
+.container {
+	/*height: 350px;*/
+	width: 250px;
+	text-align: center;
+}
+
+h1 {
+	text-align: center;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-top: dashed 1px black;
+}
+
+.logo {
+}
+
+.option {
+	padding: 0;
+	text-align: center;
+	border-bottom: dashed 1px black;
+}
+
+.option a {
+	outline-width: 0;
+	padding: 7px 0;
+	display: block;
+	width: 100%;
+	text-decoration: none;
+	line-height: 20px;
+	color: black;
+}
+
+.option a:hover {
+	background: lightgrey;
+}
+
+footer {
+	text-align: right;
+	font-size: 10px;
+}
