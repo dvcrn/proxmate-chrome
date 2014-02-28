@@ -32,6 +32,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
    * @param {Function} callback callback function
   ###
   installPackage = (key, callback) ->
+    callback = callback || ->
     server = ConfigProvider.get('primary_server')
     packageUrl = "#{server}/package/#{key}/install.json"
     $.get packageUrl, (packageData) ->

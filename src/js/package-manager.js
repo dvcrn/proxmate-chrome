@@ -50,6 +50,7 @@
      */
     installPackage = function(key, callback) {
       var packageUrl, server;
+      callback = callback || function() {};
       server = ConfigProvider.get('primary_server');
       packageUrl = "" + server + "/package/" + key + "/install.json";
       return $.get(packageUrl, function(packageData) {
