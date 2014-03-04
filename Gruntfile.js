@@ -11,6 +11,16 @@ module.exports = function (grunt) {
                 singleRun: true,
             }
         },
+        watch: {
+            coffee: {
+                files: ['src/**/*.coffee'],
+                tasks: ['coffee:src']
+            },
+            test: {
+                files: ['test/**/*.coffee'],
+                tasks: ['coffee:test', 'karma']
+            }
+        },
         coffee: {
             src: {
                 expand: true,
@@ -103,10 +113,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ngmin');
 
     // Register commands
-
     grunt.registerTask('src', [
         'clean:src',
         'coffee:src',
@@ -122,6 +132,7 @@ module.exports = function (grunt) {
         'uglify:dist'
     ])
 
+    grunt.registerTask('serve', ['src', 'watch'])
     grunt.registerTask('test', ['src', 'karma']);
     grunt.registerTask('default', 'test');
 };
