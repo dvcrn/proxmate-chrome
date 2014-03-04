@@ -69,6 +69,30 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        cssmin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    src: ['dist/**/*.css'],
+                    dest: ''
+                }]
+            }
+        },
+        htmlmin: {
+            dist: {
+                options: {
+                    collapseWhitespace: true,
+                    collapseBooleanAttributes: true,
+                    removeCommentsFromCDATA: true,
+                    removeOptionalTags: true
+                },
+                files: [{
+                    expand: true,
+                    src: ['dist/**/*.html'],
+                    dest: ''
+                }]
+            }
+        },
         copy: {
             src: {
                 files: [{
@@ -123,7 +147,9 @@ module.exports = function (grunt) {
         'coffee:dist',
         'copy:dist',
         'ngmin:dist',
-        'uglify:dist'
+        'uglify:dist',
+        'cssmin:dist',
+        'htmlmin:dist'
     ])
 
     grunt.registerTask('serve', ['src', 'watch'])
