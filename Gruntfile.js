@@ -1,4 +1,7 @@
 module.exports = function (grunt) {
+
+    require('load-grunt-tasks')(grunt);
+
     grunt.initConfig({
         manifest: grunt.file.readJSON('manifest.json'),
         karma: {
@@ -44,7 +47,7 @@ module.exports = function (grunt) {
         ngmin: {
             dist: {
                 files: [
-                    {expand: true, src: ['dist/src/js/pages/**/*.js'], dest: ''},
+                    {expand: true, src: ['dist/src/pages/**/*.js'], dest: ''},
                 ]
             }
         },
@@ -106,15 +109,6 @@ module.exports = function (grunt) {
             dist: 'dist'
         }
     });
-
-    // Register tasks.
-    grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-contrib-coffee');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-ngmin');
 
     // Register commands
     grunt.registerTask('src', [
