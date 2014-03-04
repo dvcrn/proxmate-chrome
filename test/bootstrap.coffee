@@ -20,10 +20,10 @@ window.chrome =
       addListener: ->
 
 require.config
-  baseUrl: '/base/src/js'
+  baseUrl: '/base/src'
   paths:
-    "text": "../../bower_components/requirejs-text/text"
-    "jquery": "../../bower_components/jquery/dist/jquery"
+    "text": "../bower_components/requirejs-text/text"
+    "jquery": "../bower_components/jquery/dist/jquery"
 
   # load all tests
   deps: deps

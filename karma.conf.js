@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: '.tmp',
 
 
     // frameworks to use
@@ -16,8 +16,8 @@ module.exports = function(config) {
     files: [
       'test/bootstrap.js',
 
-      {pattern: 'test/js/*-test.js', included: false},
-      {pattern: 'src/js/*.js', included: false},
+      {pattern: 'test/plugin/*-test.js', included: false},
+      {pattern: 'src/**/*.js', included: false},
       {pattern: 'test/testdata/**/*.json', included: false},
 
       {pattern: 'bower_components/jquery/dist/jquery.js', included: false},

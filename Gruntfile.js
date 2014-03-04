@@ -51,7 +51,6 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    // cwd: 'src/js',
                     src: ['dist/**/*.js', '!dist/bower_components/**'],
                     dest: ''
                 }]
@@ -67,8 +66,11 @@ module.exports = function (grunt) {
                         '.tmp/bower_components/angular/angular.js': 'bower_components/angular/angular.js',
                         '.tmp/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.js',
                         '.tmp/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
-                        '.tmp/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js'
+                        '.tmp/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js',
+
+                        '.tmp/bower_components/angular-mocks/angular-mocks.js': 'bower_components/angular-mocks/angular-mocks.js'
                     },
+                    {expand: true, src: ['test/testdata/**'], dest: '.tmp/'},
                     {expand: true, src: ['ressources/**'], dest: '.tmp/'},
                     {expand: true, src: ['pages/**'], dest: '.tmp/'}
                 ]
@@ -104,7 +106,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-ngmin');
 
     // Register commands
-    grunt.registerTask('test', 'karma');
 
     grunt.registerTask('src', [
         'clean:src',
@@ -121,5 +122,6 @@ module.exports = function (grunt) {
         'uglify:dist'
     ])
 
+    grunt.registerTask('test', ['src', 'karma']);
     grunt.registerTask('default', 'test');
 };
