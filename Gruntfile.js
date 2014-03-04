@@ -14,30 +14,32 @@ module.exports = function (grunt) {
         coffee: {
             src: {
                 expand: true,
-                flatten: true,
-                cwd: 'src/coffee',
-                src: ['*.coffee'],
-                dest: 'src/js/',
+                src: ['src/**/*.coffee'],
+                dest: '.tmp/',
                 ext: '.js'
             },
             test: {
                 expand: true,
-                flatten: true,
-                cwd: 'test/coffee',
-                src: ['*.coffee'],
-                dest: 'test/js/',
+                src: ['test/**/*.coffee'],
+                dest: '.tmp/',
+                ext: '.js'
+            },
+            dist: {
+                expand: true,
+                src: ['src/**/*.coffee'],
+                dest: 'dist/',
                 ext: '.js'
             }
         },
         ngmin: {
-            pages: {
+            dist: {
                 files: [
-                    {expand: true, src: ['src/js/pages/**/*.js'], dest: ''},
+                    {expand: true, src: ['dist/src/js/pages/**/*.js'], dest: ''},
                 ]
             }
         },
         uglify: {
-            compress: {
+            dist: {
                 options: {
                     mangle: true,
                     compress: true,
@@ -49,49 +51,48 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'src/js',
-                    src: '**/*.js',
-                    dest: 'dist/src/js'
+                    // cwd: 'src/js',
+                    src: ['dist/**/*.js', '!dist/bower_components/**'],
+                    dest: ''
                 }]
-            },
-            vendors: {
-                options: {
-                    mangle: true,
-                    compress: true
-                },
-                files: {
-                    'dist/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
-                    'dist/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js',
-                }
             }
         },
         copy: {
-            main: {
-                files: {
-                    'dist/manifest.json': 'manifest.json',
-                    'dist/proxmate.json': 'proxmate.json',
-                    'dist/background.html': 'background.html'
-                }
-            },
-            vendors: {
-                files: {
-                    'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
-                    'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
-                    'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js'
-                }
-            },
-            ressources: {
-                files: [
-                    {expand: true, src: ['ressources/**'], dest: 'dist/'},
+            src: {
+                files: [{
+                        '.tmp/manifest.json': 'manifest.json',
+                        '.tmp/proxmate.json': 'proxmate.json',
+                        '.tmp/background.html': 'background.html',
+                        '.tmp/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.js',
+                        '.tmp/bower_components/angular/angular.js': 'bower_components/angular/angular.js',
+                        '.tmp/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.js',
+                        '.tmp/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
+                        '.tmp/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js'
+                    },
+                    {expand: true, src: ['ressources/**'], dest: '.tmp/'},
+                    {expand: true, src: ['pages/**'], dest: '.tmp/'}
                 ]
             },
-            pages: {
-                files: [
-                    {expand: true, src: ['pages/**'], dest: 'dist/'},
+            dist: {
+                files: [{
+                        'dist/manifest.json': 'manifest.json',
+                        'dist/proxmate.json': 'proxmate.json',
+                        'dist/background.html': 'background.html',
+                        'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
+                        'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
+                        'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
+                        'dist/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
+                        'dist/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js'
+                    },
+                    {expand: true, src: ['ressources/**'], dest: 'dist/'},
+                    {expand: true, src: ['pages/**'], dest: 'dist/'}
                 ]
             }
         },
-        clean: ['dist']
+        clean: {
+            src: '.tmp',
+            dist: 'dist'
+        }
     });
 
     // Register tasks.
@@ -104,7 +105,21 @@ module.exports = function (grunt) {
 
     // Register commands
     grunt.registerTask('test', 'karma');
-    grunt.registerTask('build', ['clean', 'coffee', 'karma', 'copy', 'ngmin', 'uglify:compress', 'uglify:vendors'])
+
+    grunt.registerTask('src', [
+        'clean:src',
+        'coffee:src',
+        'coffee:test',
+        'copy:src'
+    ])
+
+    grunt.registerTask('build', [
+        'clean:dist',
+        'coffee:dist',
+        'copy:dist',
+        'ngmin:dist',
+        'uglify:dist'
+    ])
 
     grunt.registerTask('default', 'test');
 };

@@ -10,5 +10,5 @@ codekit-config.json
 app/
 dist/
 *.pem
-
+.tmp/
 *.nex
