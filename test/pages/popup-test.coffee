@@ -10,7 +10,7 @@ describe 'Controller: InstallCtrl', () ->
   controller = {}
   chromeSpy = {}
 
-  # Initialize the controller and a mock scope
+  # Init mock scope
   beforeEach inject ($controller, $rootScope) ->
     scope = $rootScope.$new()
     controller = $controller
