@@ -75,3 +75,21 @@ define ['storage', 'chrome'], (StorageModule, Chrome) ->
 
         # If we didn't have global_status in the storage yet, it should be true
         assert.equal(true, StorageModule.get('global_status'))
+
+    describe 'Testing Remove', ->
+      it 'should remove a key correctly and write into chrome storage', ->
+        StorageModule.set('asdf', 123)
+        StorageModule.set('asdf2', 123)
+        StorageModule.set('asdf3', 123)
+
+        assert.equal(123, StorageModule.get('asdf'))
+        assert.equal(123, StorageModule.get('asdf2'))
+        assert.equal(123, StorageModule.get('asdf3'))
+
+        StorageModule.remove('asdf')
+        assert.equal(null, StorageModule.get('asdf'))
+        assert.equal(123, StorageModule.get('asdf2'))
+        assert.equal(123, StorageModule.get('asdf3'))
+
+        this.clock.tick(1000)
+        assert.isTrue(this.storageSetStub.calledWith({'asdf2': 123, 'asdf3': 123}))

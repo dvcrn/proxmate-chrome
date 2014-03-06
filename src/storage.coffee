@@ -49,9 +49,18 @@ define ['chrome'], (Chrome) ->
     internStorage[key] = value
     copyIntoChromeStorage()
 
+  ###*
+   * Deletes a key from storage
+   * @param  {String} key key to remove
+  ###
+  remove = (key) ->
+    delete internStorage[key]
+    copyIntoChromeStorage()
+
   return {
     init: init,
     flush: flush,
     set: set,
-    get: get
+    get: get,
+    remove: remove
   }

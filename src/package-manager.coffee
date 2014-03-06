@@ -62,6 +62,17 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
 
     return packageJson
 
+  ###*
+   * Removes a installed package
+   * @param  {String} key package id
+  ###
+  removePackage = (key) ->
+    # Kick the package out of the storage
+    StorageManager.remove(key)
+    # Remove it from versions array
+    installedPackages = StorageManager.get('installed_packages')
+    delete installedPackages[key]
+    StorageManager.set('installed_packages', installedPackages)
 
   exports = {
     init: init
@@ -69,6 +80,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
     downloadVersionRepository: downloadVersionRepository
     installPackage: installPackage
     getInstalledPackages: getInstalledPackages
+    removePackage: removePackage
   }
 
   return exports

@@ -40,6 +40,10 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
 
         sendResponse true
 
+      when 'getInstalledPackages'
+        packages = PackageManager.getInstalledPackages()
+        sendResponse packages
+
     true
 
   exports = {

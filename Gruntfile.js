@@ -17,11 +17,15 @@ module.exports = function (grunt) {
         watch: {
             coffee: {
                 files: ['src/**/*.coffee'],
-                tasks: ['coffee:src']
+                tasks: ['coffee:src', 'karma']
             },
             test: {
                 files: ['test/**/*.coffee'],
                 tasks: ['coffee:test', 'karma']
+            },
+            pages: {
+                files: ['pages/**/*'],
+                tasks: ['copy:src']
             }
         },
         coffee: {

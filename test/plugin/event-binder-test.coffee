@@ -80,3 +80,18 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
         assert.isTrue(storageSetStub.calledWith('global_status', false))
         assert.isTrue(callback.calledOnce)
         assert.isTrue(stopStub.calledTwice)
+
+    it 'should return all installed packages on getInstalledPackages', ->
+        returnObject = {1: 2}
+        packageManagerStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
+            return returnObject
+        )
+        callback = this.sandbox.spy()
+
+        EventBinder.messageListener({action: 'getInstalledPackages', params: {}}, {}, callback)
+
+        assert.isTrue(packageManagerStub.calledOnce)
+        assert.isTrue(callback.calledOnce)
+        assert.isTrue(callback.calledWith(returnObject))
+
+
