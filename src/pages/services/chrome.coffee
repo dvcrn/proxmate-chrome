@@ -18,4 +18,12 @@ angular.module('chrome', [])
       setProxmateStatus: (status, callback) ->
         chrome.runtime.sendMessage {action: "setProxmateGlobalStatus", params:{newStatus: status}}, (response) ->
           callback response
+
+      getInstalledPackages: (callback) ->
+        chrome.runtime.sendMessage {action: "getInstalledPackages", params:{}}, (response) ->
+          callback response
+
+      removePackage: (packageId, callback) ->
+        chrome.runtime.sendMessage {action: "removePackage", params:{packageId: packageId}}, (response) ->
+          callback response
     }

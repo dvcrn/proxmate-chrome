@@ -44,6 +44,12 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
         packages = PackageManager.getInstalledPackages()
         sendResponse packages
 
+      when 'removePackage'
+        packageId = params.packageId
+        PackageManager.removePackage(packageId)
+
+        sendResponse true
+
     true
 
   exports = {

@@ -94,4 +94,13 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
         assert.isTrue(callback.calledOnce)
         assert.isTrue(callback.calledWith(returnObject))
 
+    it 'should call removePackage on removePackage', ->
+        packageManagerStub = this.sandbox.stub(PackageManager, 'removePackage')
+        callback = this.sandbox.spy()
 
+        EventBinder.messageListener({action: 'removePackage', params: {packageId: 'asdf'}}, {}, callback)
+
+        assert.isTrue(callback.calledOnce)
+
+        assert.isTrue(packageManagerStub.calledWith('asdf'))
+        assert.isTrue(packageManagerStub.calledOnce)

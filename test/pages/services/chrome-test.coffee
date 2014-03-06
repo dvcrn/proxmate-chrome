@@ -50,3 +50,17 @@ describe 'Factory: chrome', () ->
 
     expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'setProxmateGlobalStatus', params:{newStatus: false}}, jasmine.any(Function))
     expect(callback).toHaveBeenCalledWith('some callback string')
+
+  it 'should create the correct message for getAllPackages', ->
+    callback = jasmine.createSpy('callback spy')
+    chrome.getInstalledPackages(callback)
+
+    expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'getInstalledPackages', params:{}}, jasmine.any(Function))
+    expect(callback).toHaveBeenCalled()
+
+  it 'should create the correct message for remove package', ->
+    callback = jasmine.createSpy('callback spy')
+    chrome.removePackage(123, callback)
+
+    expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'removePackage', params:{packageId: 123}}, jasmine.any(Function))
+    expect(callback).toHaveBeenCalled()
