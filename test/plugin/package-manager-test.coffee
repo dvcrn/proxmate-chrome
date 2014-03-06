@@ -163,3 +163,6 @@ define [
         # Check for new installed_packages array
         assert.isTrue(storageSetStub.calledWith('installed_packages', {'foo': 2, 'bar': 3}))
         assert.isTrue(storageSetStub.calledOnce)
+
+        # Check restart runtime
+        assert.isTrue(this.runtimeStub.calledOnce)

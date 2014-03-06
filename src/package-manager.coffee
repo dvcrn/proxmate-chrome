@@ -73,6 +73,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
     installedPackages = StorageManager.get('installed_packages')
     delete installedPackages[key]
     StorageManager.set('installed_packages', installedPackages)
+    require('runtime').restart()
 
   exports = {
     init: init
