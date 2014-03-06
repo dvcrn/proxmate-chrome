@@ -1,12 +1,13 @@
 {
   "manifest_version": 2,
   "name": "ProxMate Next",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Intelligent proxy package manager",
   "background": {
     "page": "background.html"
   },
   "homepage_url": "http://proxmate.dave.cx/",
+  "options_page": "pages/options/index.html",
   "browser_action": {
     "default_title": "Click to manage ProxMate",
     "default_icon": "ressources/images/icon128.png",

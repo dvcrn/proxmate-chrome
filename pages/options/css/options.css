@@ -1,0 +1,53 @@
+body {
+  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  background: #eee;
+  color: #222222;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  color: #555;
+  text-shadow: 0 3px 3px #bbbbbb;
+  font-size: 40px;
+  display: inline-block;
+  position: absolute;
+  top: 45px;
+}
+
+h2 {
+	text-shadow: 0 3px 3px #ccc;
+	font-size: 22px;
+	background: url('../../../ressources/images/arrow.png') no-repeat left center;
+	margin: 15px 0 15px 0;
+	padding: 0 0 0 20px;
+}
+
+.logo {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	margin-right: 10px;
+}
+
+header {
+	border-bottom: 8px solid #000;
+	box-shadow: 0 3px 20px #8c8c8c;
+	margin: 0;
+	padding: 0;
+}
+
+.wrap {
+	width: 940px;
+	margin: 0 auto;
+	position: relative;
+}
+
+.footer {
+	text-align: center;
+}
+
+a {
+	text-decoration: none;
+	color: #1f90e0;
+}
