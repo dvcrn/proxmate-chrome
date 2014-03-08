@@ -3,8 +3,9 @@ define [
   'package-manager',
   'server-manager',
   'proxy-manager',
-  'storage'
-], (Runtime, PackageManager, ServerManager, ProxyManager, Storage) ->
+  'storage',
+  'chrome'
+], (Runtime, PackageManager, ServerManager, ProxyManager, Storage, Chrome) ->
 
   describe 'Runtime ', ->
     beforeEach ->
@@ -14,9 +15,9 @@ define [
       this.sandbox.restore()
 
     describe 'start', ->
-      it 'should do nothing if no servers or packages are available', ->
+      it 'should do nothing if no servers are available', ->
         getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
-          return []
+          return [1,2,3]
         )
 
         getServersStub = this.sandbox.stub(ServerManager, 'getServers', ->
@@ -30,12 +31,44 @@ define [
 
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
         setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
+        chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
 
         Runtime.start()
 
         assert.isTrue(getInstalledPackagesStub.calledOnce)
         assert.isTrue(getServersStub.calledOnce)
 
+        assert.isFalse(chromeBadgeTextStub.calledOnce)
+        assert.isFalse(generatePacStub.calledOnce)
+        assert.isFalse(setPacStub.calledOnce)
+
+      it 'should change the badgeText when no packages are available and do nothing', ->
+        getInstalledPackagesStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
+          return []
+        )
+
+        getServersStub = this.sandbox.stub(ServerManager, 'getServers', ->
+          return [1,2,3]
+        )
+
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key is 'global_status'
+            return true
+        )
+
+        generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
+        setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
+        chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
+
+        Runtime.start()
+
+        assert.isTrue(getInstalledPackagesStub.calledOnce)
+        assert.isTrue(getServersStub.calledOnce)
+
+        # Browser text got changed
+        assert.isTrue(chromeBadgeTextStub.calledWith({text: "None"}))
+
+        # It shouldn't do anything other than that
         assert.isFalse(generatePacStub.calledOnce)
         assert.isFalse(setPacStub.calledOnce)
 
@@ -85,11 +118,13 @@ define [
 
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
         setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
+        chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
 
         Runtime.start()
 
         assert.isTrue(getInstalledPackagesStub.calledOnce)
         assert.isTrue(getServersStub.calledOnce)
+        assert.isTrue(chromeBadgeTextStub.calledWith({text: ""}))
 
         assert.isTrue(generatePacStub.calledOnce)
         assert.isTrue(setPacStub.calledOnce)

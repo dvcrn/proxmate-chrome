@@ -86,3 +86,11 @@ a {
 .package p {
 	display: inline-block;
 }
+
+.no-package-warning {
+	background: white;
+	display: block;
+	padding: 20px;
+	border: dotted 1px black;
+	text-align: center;
+}

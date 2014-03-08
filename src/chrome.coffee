@@ -17,6 +17,9 @@ define [], ->
     runtime:
       onMessage:
         addListener: chrome.runtime.onMessage.addListener
+
+    browserAction:
+      setBadgeText: chrome.browserAction.setBadgeText
   }
 
   if chrome.app

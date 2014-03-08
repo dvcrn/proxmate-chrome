@@ -12,7 +12,12 @@ angular.module('popupApp')
         $scope.proxmateStatus = response
         $scope.$digest()
       )
-    $scope.updateProxmateStatus()
+
+    $scope.fetchInstalledPackages = ->
+      Chrome.getInstalledPackages((packages) ->
+        $scope.installedPackages = packages
+        $scope.$digest()
+      )
 
     $scope.deactivateProxmate = ->
       Chrome.setProxmateStatus(false, ->
@@ -23,4 +28,7 @@ angular.module('popupApp')
       Chrome.setProxmateStatus(true, ->
         $scope.updateProxmateStatus()
       )
+
+    $scope.updateProxmateStatus()
+    $scope.fetchInstalledPackages()
   ]

@@ -2,8 +2,9 @@ define [
   'package-manager',
   'server-manager',
   'proxy-manager',
-  'storage'
-], (PackageManager, ServerManager, ProxyManager, Storage) ->
+  'storage',
+  'chrome'
+], (PackageManager, ServerManager, ProxyManager, Storage, Chrome) ->
   init = ->
 
   ###*
@@ -20,7 +21,10 @@ define [
 
     if packages.length == 0 or servers.length == 0
         console.info 'No servers and packages'
+        if packages.length == 0
+          Chrome.browserAction.setBadgeText({text: "None"})
     else
+        Chrome.browserAction.setBadgeText({text: ""})
         pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
         ProxyManager.setProxyAutoconfig(pac)
 

@@ -19,6 +19,9 @@ window.chrome =
     onMessage:
       addListener: ->
 
+  browserAction:
+    setBadgeText: ->
+
 require.config
   baseUrl: '/base/src'
   paths:
