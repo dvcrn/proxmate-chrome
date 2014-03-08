@@ -35,6 +35,7 @@ header {
 	box-shadow: 0 3px 20px #8c8c8c;
 	margin: 0;
 	padding: 0;
+	padding-top: 10px;
 }
 
 .wrap {
