@@ -21,6 +21,7 @@ window.chrome =
 
   browserAction:
     setBadgeText: ->
+    setIcon: ->
 
 require.config
   baseUrl: '/base/src'

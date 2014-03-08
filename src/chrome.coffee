@@ -20,6 +20,7 @@ define [], ->
 
     browserAction:
       setBadgeText: chrome.browserAction.setBadgeText
+      setIcon: chrome.browserAction.setIcon
   }
 
   if chrome.app

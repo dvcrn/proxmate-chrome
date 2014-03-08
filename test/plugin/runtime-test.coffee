@@ -31,14 +31,12 @@ define [
 
         generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
         setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
-        chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
 
         Runtime.start()
 
         assert.isTrue(getInstalledPackagesStub.calledOnce)
         assert.isTrue(getServersStub.calledOnce)
 
-        assert.isFalse(chromeBadgeTextStub.calledOnce)
         assert.isFalse(generatePacStub.calledOnce)
         assert.isFalse(setPacStub.calledOnce)
 
@@ -135,7 +133,13 @@ define [
 
         assert.isTrue(stub.calledOnce)
 
-      it 'should reset the proxy on stop', ->
+      it 'should reset the proxy on stop and change icon + text', ->
         clearProxyStub = this.sandbox.stub(ProxyManager, 'clearProxy')
+        chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
+        chromeSetIconStub = this.sandbox.stub(Chrome.browserAction, 'setIcon')
+
         Runtime.stop()
+
         assert.isTrue(clearProxyStub.calledOnce)
+        assert.isTrue(chromeBadgeTextStub.calledOnce)
+        assert.isTrue(chromeSetIconStub.calledOnce)
