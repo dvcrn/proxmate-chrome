@@ -23,8 +23,12 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
       for key, val of installedPackages
         # Check if the key exists in the downloaded list
         if key of versionRepository
+          # If the version on the server is higher, reinstall the package
           if versionRepository[key] > val
             exports.installPackage(key)
+          # -1 implied that the package is no longer available and marked for delete
+          if versionRepository[key] == -1
+            exports.removePackage(key)
 
   ###*
    * Installs / overrides package for key 'key'

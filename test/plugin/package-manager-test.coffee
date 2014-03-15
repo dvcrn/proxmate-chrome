@@ -46,7 +46,7 @@ define [
 
         assert.isTrue(callback.calledWith(expectedPayload))
 
-      it 'should call downloadVersionRepository and install outdated packages', ->
+      it 'should call downloadVersionRepository and install / delete outdated packages', ->
         # Mock storage.get to return a fake array of installed packages
         this.storageGetStub = this.sandbox.stub(Storage, 'get', ->
           return {
@@ -54,6 +54,7 @@ define [
             'somethingOutdated': 1,
             'somethingWithoutUpdate': 1,
             'somethingElseOutdated': 2,
+            'somethingToDelete': 3
           }
         )
 
@@ -61,7 +62,8 @@ define [
         testVersionJson = {
           'somethingThatsUpToDate': 2,
           'somethingOutdated': 2
-          'somethingElseOutdated': 3
+          'somethingElseOutdated': 3,
+          'somethingToDelete': -1
         }
 
         downloadVersionRepositoryStub = this.sandbox.stub(PackageManager, "downloadVersionRepository", (callback) ->
@@ -70,6 +72,7 @@ define [
 
         # InstalledPackage should get called after finding outdated packages
         installPackageStub = this.sandbox.stub(PackageManager, "installPackage")
+        removePackageStub = this.sandbox.stub(PackageManager, "removePackage")
 
         PackageManager.checkForUpdates()
         assert.isTrue(downloadVersionRepositoryStub.calledOnce)
@@ -77,6 +80,10 @@ define [
         assert.isTrue(installPackageStub.calledTwice, "All outdated packages have been passed to installing")
         assert.isTrue(installPackageStub.calledWith('somethingOutdated'))
         assert.isTrue(installPackageStub.calledWith('somethingElseOutdated'))
+
+        assert.isTrue(removePackageStub.calledOnce)
+        assert.isTrue(removePackageStub.calledWith('somethingToDelete'))
+
 
     describe 'Installation behaviour', ->
       it 'should download package information from server', ->
