@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ProxMate Beta",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Intelligent proxy package manager",
   "background": {
     "page": "background.html"
@@ -41,5 +41,6 @@
     "webNavigation",
     "storage",
     "notifications"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }
