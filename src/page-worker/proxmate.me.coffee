@@ -1,12 +1,12 @@
-currentHash = null
-checkHash = ->
-  hash = location.hash
-  if hash is currentHash
+currentUrl = null
+checkUrl = ->
+  url = location.href
+  if url is currentUrl
     return
-  currentHash = hash
+  currentUrl = url
 
   # Execute code here. Check the proxmate button, change it's class and put event listeners on it :)
-  if currentHash.indexOf('package/') != -1
+  if currentUrl.indexOf('package/') != -1
     installButton = $('.installbutton')
 
     # Indicate that the user can install now
@@ -25,4 +25,4 @@ checkHash = ->
       window.open chrome.extension.getURL("pages/install/index.html#!/install/#{packageid}")
 
 
-setInterval checkHash, 1000
+setInterval checkUrl, 1000
