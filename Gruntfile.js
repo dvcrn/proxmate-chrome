@@ -73,6 +73,23 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        closurecompiler: {
+            dist: {
+                options: {
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    banner: '/*\n' +
+                            '  <%= manifest.name %> version <%= manifest.version %> by David Mohl\n' +
+                            '  Built on <%= grunt.template.today("yyyy-mm-dd @ HH:MM") %>\n' +
+                            '  Please see github.com/dabido/proxmate-chrome/ for infos\n' +
+                            '*/\n'
+                },
+                files: [{
+                    expand: true,
+                    src: ['dist/**/*.js', '!dist/bower_components/**'],
+                    dest: ''
+                }]
+            }
+        },
         cssmin: {
             dist: {
                 files: [{
@@ -151,7 +168,7 @@ module.exports = function (grunt) {
         'coffee:dist',
         'copy:dist',
         'ngmin:dist',
-        'uglify:dist',
+        'closurecompiler:dist',
         'cssmin:dist',
         'htmlmin:dist'
     ])
