@@ -34,6 +34,7 @@ define [
    * Restarts application flow. This means the app is already running and now getting started again.
   ###
   restart = ->
+    exports.stop()
     exports.start()
 
   ###*

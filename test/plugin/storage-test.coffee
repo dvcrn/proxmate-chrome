@@ -78,6 +78,8 @@ define ['storage', 'chrome'], (StorageModule, Chrome) ->
 
     describe 'Testing Remove', ->
       it 'should remove a key correctly and write into chrome storage', ->
+        stub = this.sandbox.stub(Chrome.storage.local, 'remove')
+
         StorageModule.set('asdf', 123)
         StorageModule.set('asdf2', 123)
         StorageModule.set('asdf3', 123)
@@ -87,6 +89,7 @@ define ['storage', 'chrome'], (StorageModule, Chrome) ->
         assert.equal(123, StorageModule.get('asdf3'))
 
         StorageModule.remove('asdf')
+        assert.isTrue(stub.calledWith('asdf'))
         assert.equal(null, StorageModule.get('asdf'))
         assert.equal(123, StorageModule.get('asdf2'))
         assert.equal(123, StorageModule.get('asdf3'))

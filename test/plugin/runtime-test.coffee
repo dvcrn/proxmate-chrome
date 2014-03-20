@@ -127,11 +127,13 @@ define [
         assert.isTrue(generatePacStub.calledOnce)
         assert.isTrue(setPacStub.calledOnce)
 
-      it 'should call start on restart', ->
-        stub = this.sandbox.stub(Runtime, 'start')
+      it 'should call start and stop on restart', ->
+        stub1 = this.sandbox.stub(Runtime, 'stop')
+        stub2 = this.sandbox.stub(Runtime, 'start')
         Runtime.restart()
 
-        assert.isTrue(stub.calledOnce)
+        assert.isTrue(stub1.calledOnce)
+        assert.isTrue(stub2.calledOnce)
 
       it 'should reset the proxy on stop and change icon + text', ->
         clearProxyStub = this.sandbox.stub(ProxyManager, 'clearProxy')

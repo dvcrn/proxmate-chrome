@@ -8,6 +8,7 @@ define [], ->
       local:
         set: chrome.storage.local.set
         get: chrome.storage.local.get
+        remove: chrome.storage.local.remove
 
     proxy:
       settings:

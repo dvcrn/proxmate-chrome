@@ -55,6 +55,7 @@ define ['chrome'], (Chrome) ->
   ###
   remove = (key) ->
     delete internStorage[key]
+    Chrome.storage.local.remove(key)
     copyIntoChromeStorage()
 
   return {

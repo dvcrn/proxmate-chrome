@@ -9,6 +9,7 @@ window.chrome =
     local:
       set: ->
       get: ->
+      remove: ->
 
   proxy:
     settings:
