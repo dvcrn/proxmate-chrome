@@ -88,7 +88,10 @@ define [
     describe 'Installation behaviour', ->
       it 'should download package information from server', ->
         this.storageSetStub = this.sandbox.stub(Storage, 'set')
-        this.storageGetStub = this.sandbox.stub(Storage, 'get', ->
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key == 'donation_key'
+            return null
+
           return {}
         )
 
@@ -104,7 +107,8 @@ define [
         this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
 
         # The packagemanager should retrieve installed_packages
-        assert.isTrue(this.storageGetStub.calledOnce)
+        assert.isTrue(this.storageGetStub.calledTwice)
+        assert.isTrue(this.storageGetStub.calledWith('donation_key'))
         assert.isTrue(this.storageGetStub.calledWith('installed_packages'))
 
         # Then take what it gets back from installed packages and append the new element
@@ -118,6 +122,69 @@ define [
 
         # Check that restart got called
         assert.isTrue(this.runtimeStub.calledOnce)
+
+      it 'should append the correct donation key if available', ->
+        this.storageSetStub = this.sandbox.stub(Storage, 'set')
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key == 'donation_key'
+            return 'asdf'
+
+          return {}
+        )
+        callback = this.sandbox.spy()
+        PackageManager.installPackage('asdf', callback)
+
+        # Fake xhr answer
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal("www.abc.de/package/asdf/install.json?key=asdf", this.sandbox.server.requests[0].url)
+        # this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
+
+      it 'should react correctly on 401 (unauthorised) status', ->
+        this.storageSetStub = this.sandbox.stub(Storage, 'set')
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          if key == 'donation_key'
+            return 'asdf'
+
+          return {}
+        )
+        callback = this.sandbox.spy()
+        PackageManager.installPackage('asdf', callback)
+
+        # Fake xhr answer
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal("www.abc.de/package/asdf/install.json?key=asdf", this.sandbox.server.requests[0].url)
+        this.sandbox.server.requests[0].respond(401, {'Content-Type':'application/json'}, JSON.stringify(
+          { "message": "Foo" }))
+
+        # Check that restart didn't get called
+        assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
+        assert.isTrue(callback.calledWith({success: false, message: 'Foo'}))
+
+      it 'should react correctly on 500 error', ->
+        this.storageSetStub = this.sandbox.stub(Storage, 'set')
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          return {}
+        )
+
+        callback = this.sandbox.spy()
+        PackageManager.installPackage('asdf', callback)
+
+        this.sandbox.server.requests[0].respond(500, {'Content-Type':'text/html'})
+        assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
+        assert.isTrue(callback.calledWith({success: false, message: 'There was a problem installing this package.'}))
+
+      it 'should react correctly on 404 error', ->
+        this.storageSetStub = this.sandbox.stub(Storage, 'set')
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          return {}
+        )
+        callback = this.sandbox.spy()
+        PackageManager.installPackage('asdf2', callback)
+
+        this.sandbox.server.requests[0].respond(404, {'Content-Type':'text/html'})
+        assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
+        assert.isTrue(callback.calledWith({success: false, message: "The package you tried to install doesn't exist..."}))
+
 
     describe 'Basic functionality', ->
 

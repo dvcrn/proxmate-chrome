@@ -30,3 +30,20 @@ describe 'Controller: InstallCtrl', () ->
 
     expect(scope.status).toBe 'Installed successfully!'
     expect(chromeSpy.installPackage).toHaveBeenCalledWith(123, jasmine.any(Function))
+
+  it 'should pass the message from backend on error', () ->
+    chromeSpy = jasmine.createSpyObj('chrome', ['installPackage'])
+    chromeSpy.installPackage.andCallFake((config, callback) ->
+      callback {success: false, message: 'Wooooohohohohoho'}
+    )
+
+    InstallCtrl = controller 'InstallCtrl', {
+      $scope: scope
+      $routeParams: {
+        'packageId': 123
+      }
+      Chrome: chromeSpy
+    }
+
+    expect(scope.status).toBe 'Wooooohohohohoho'
+    expect(chromeSpy.installPackage).toHaveBeenCalled()

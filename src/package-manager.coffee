@@ -37,21 +37,40 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
   ###
   installPackage = (key, callback) ->
     callback = callback || ->
+
     server = ConfigProvider.get('primary_server')
+
+    donationKey = StorageManager.get('donation_key')
     packageUrl = "#{server}/package/#{key}/install.json"
-    $.get packageUrl, (packageData) ->
-      # Query existing installed packages and add the new version / id
-      installedPackages = StorageManager.get('installed_packages')
-      if not installedPackages
-        installedPackages = {}
+    if donationKey?
+      packageUrl = "#{server}/package/#{key}/install.json?key=#{donationKey}"
 
-      installedPackages[key] = packageData['version']
+    $.ajax packageUrl,
+      type: "GET",
+      success: (packageData) ->
+        # Query existing installed packages and add the new version / id
+        installedPackages = StorageManager.get('installed_packages')
+        if not installedPackages
+          installedPackages = {}
 
-      StorageManager.set(key, packageData)
-      StorageManager.set('installed_packages', installedPackages)
+        installedPackages[key] = packageData['version']
 
-      require('runtime').restart()
-      callback({success: true})
+        StorageManager.set(key, packageData)
+        StorageManager.set('installed_packages', installedPackages)
+
+        require('runtime').restart()
+        callback({success: true})
+      error: (xhr) ->
+        console.info xhr
+        switch xhr.status
+          when 401
+            callback {success: false, message: xhr.responseJSON.message}
+            return
+          when 404
+            callback {success: false, message: "The package you tried to install doesn't exist..."}
+            return
+          else
+            callback {success: false, message: 'There was a problem installing this package.'}
 
   ###*
    * Returns all installed packages with their package contents
