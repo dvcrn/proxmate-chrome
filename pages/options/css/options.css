@@ -95,3 +95,18 @@ a {
 	border: dotted 1px black;
 	text-align: center;
 }
+
+.donate {
+  display: relative;
+}
+
+.donate input[type=text] {
+  width: 90%;
+  line-height: 30px;
+  font-size: 20px;
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+}

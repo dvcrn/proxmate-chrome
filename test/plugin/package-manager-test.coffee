@@ -46,6 +46,16 @@ define [
 
         assert.isTrue(callback.calledWith(expectedPayload))
 
+      it 'should attach the donation key to the download url if available', ->
+        this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+          return 'foo'
+        )
+
+        callback = this.sandbox.spy()
+        PackageManager.downloadVersionRepository(callback)
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal('www.abc.de/package/update.json?key=foo', this.sandbox.server.requests[0].url)
+
       it 'should call downloadVersionRepository and install / delete outdated packages', ->
         # Mock storage.get to return a fake array of installed packages
         this.storageGetStub = this.sandbox.stub(Storage, 'get', ->

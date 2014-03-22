@@ -7,8 +7,11 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
    * @param  {Function} callback callback to pass json on
   ###
   downloadVersionRepository = (callback) ->
+    donationKey = StorageManager.get('donation_key')
     server = ConfigProvider.get('primary_server')
     updateUrl = "#{server}/package/update.json"
+    if donationKey?
+      updateUrl = "#{server}/package/update.json?key=#{donationKey}"
 
     $.get updateUrl, (data) ->
       callback(data)
@@ -61,7 +64,6 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
         require('runtime').restart()
         callback({success: true})
       error: (xhr) ->
-        console.info xhr
         switch xhr.status
           when 401
             callback {success: false, message: xhr.responseJSON.message}
