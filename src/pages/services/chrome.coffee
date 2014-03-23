@@ -3,27 +3,29 @@
 angular.module('chrome', [])
   .factory 'Chrome', () ->
 
+    emitMessage = (messageId, parameter, callback) ->
+      chrome.runtime.sendMessage {action: messageId, params: parameter}, callback
+
     # Public API here
     {
       installPackage: (packageId, callback) ->
-        console.info "trying to install package #{packageId}"
-        # Emit message to backend
-        chrome.runtime.sendMessage {action: "installPackage", params:{packageId: packageId}}, (response) ->
-          callback response
+        emitMessage('installPackage', {packageId: packageId}, callback)
 
       getProxmateStatus: (callback) ->
-        chrome.runtime.sendMessage {action: "getProxmateGlobalStatus", params:{}}, (response) ->
-          callback response
+        emitMessage('getProxmateGlobalStatus', {}, callback)
 
       setProxmateStatus: (status, callback) ->
-        chrome.runtime.sendMessage {action: "setProxmateGlobalStatus", params:{newStatus: status}}, (response) ->
-          callback response
+        emitMessage('setProxmateGlobalStatus', {newStatus: status}, callback)
 
       getInstalledPackages: (callback) ->
-        chrome.runtime.sendMessage {action: "getInstalledPackages", params:{}}, (response) ->
-          callback response
+        emitMessage('getInstalledPackages', {}, callback)
 
       removePackage: (packageId, callback) ->
-        chrome.runtime.sendMessage {action: "removePackage", params:{packageId: packageId}}, (response) ->
-          callback response
+        emitMessage('removePackage', {packageId: packageId}, callback)
+
+      getDonationkey: (callback) ->
+        emitMessage('getDonationkey', {}, callback)
+
+      setDonationkey: (key, callback) ->
+        emitMessage('setDonationkey', {donationKey: key}, callback)
     }

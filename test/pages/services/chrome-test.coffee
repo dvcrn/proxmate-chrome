@@ -64,3 +64,17 @@ describe 'Factory: chrome', () ->
 
     expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'removePackage', params:{packageId: 123}}, jasmine.any(Function))
     expect(callback).toHaveBeenCalled()
+
+  it 'should create the correct message for retrieving donation key', ->
+    callback = jasmine.createSpy('callback spy')
+    chrome.getDonationkey(callback)
+
+    expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'getDonationkey', params:{}}, jasmine.any(Function))
+    expect(callback).toHaveBeenCalled()
+
+  it 'should create the correct message for setting donation key', ->
+    callback = jasmine.createSpy('callback spy')
+    chrome.setDonationkey('foo', callback)
+
+    expect(runtimeSpy.sendMessage).toHaveBeenCalledWith({action: 'setDonationkey', params:{donationKey: 'foo'}}, jasmine.any(Function))
+    expect(callback).toHaveBeenCalled()

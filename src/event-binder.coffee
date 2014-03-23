@@ -50,6 +50,17 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
 
         sendResponse true
 
+      when 'getDonationkey'
+        key = Storage.get('donation_key')
+        sendResponse key
+
+      when 'setDonationkey'
+        key = params.donationKey
+        Storage.set('donation_key', key)
+
+        if (Storage.get('donation_key') == key)
+          sendResponse true
+
     true
 
   exports = {

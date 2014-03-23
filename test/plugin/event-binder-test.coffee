@@ -104,3 +104,23 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
 
         assert.isTrue(packageManagerStub.calledWith('asdf'))
         assert.isTrue(packageManagerStub.calledOnce)
+
+    it 'should retrieve info from storage on getDonationkey', ->
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
+        callback = this.sandbox.spy()
+
+        EventBinder.messageListener({action: 'getDonationkey', params: {}}, {}, callback)
+
+        assert.isTrue(storageGetStub.calledWith('donation_key'))
+        assert.isTrue(callback.calledWith('foo'))
+
+    it 'should save the donation key into storage on setDonationkey', ->
+        storageSetStub = this.sandbox.stub(Storage, 'set', (key) -> return 'foo')
+        storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
+        callback = this.sandbox.spy()
+
+        EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: 'foo'}}, {}, callback)
+
+        assert.isTrue(storageSetStub.calledWith('donation_key', 'foo'))
+        assert.isTrue(callback.calledWith(true))
+
