@@ -168,7 +168,7 @@ module.exports = function (grunt) {
         'coffee:dist',
         'copy:dist',
         'ngmin:dist',
-        'uglify:dist',
+        'closurecompiler:dist',
         'cssmin:dist',
         'htmlmin:dist'
     ])
