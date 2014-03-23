@@ -126,3 +126,14 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
         assert.isTrue(callback.calledWith(true))
         assert.isTrue(runtimeStub.calledOnce)
 
+    it 'should remove donation key if setDonationkey is null', ->
+        runtimeStub = this.sandbox.stub(Runtime, 'restart')
+        storageRemoveStub = this.sandbox.stub(Storage, 'remove', (key) -> return 'foo')
+        callback = this.sandbox.spy()
+
+        EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: null}}, {}, callback)
+
+        assert.isTrue(storageRemoveStub.calledWith('donation_key'))
+        assert.isTrue(callback.calledWith(true))
+        assert.isTrue(runtimeStub.calledOnce)
+

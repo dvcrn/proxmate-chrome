@@ -34,8 +34,9 @@
           <h2>Support ProxMate</h2>
           <p>Helped ProxMate? Donated over $3? Enter your key here to unlock some extras.</p>
           <p><a href="http://proxmate.me/donate" target="_blank">Click here for more info!</a></p>
-          <input type="text" name="donationKey" ng-model="donationKey" placeholder="Donation Key">
-          <button ng-disabled="donationKey.length < 10" ng-click="validateKey(donationKey)">Set Key</button>
+          <input type="text" ng-disabled="hasDonationkey" name="donationKey" ng-model="donationKey" placeholder="Donation Key">
+          <button ng-hide="hasDonationkey" ng-disabled="donationKey.length < 30" ng-click="validateKey(donationKey)">Set Key</button>
+          <button ng-show="hasDonationkey" ng-click="clearKey()">Clear Key</button>
           <p><strong>{{ donationKeyStatus }}</strong></p>
         </section>
         <section class="thankyou">

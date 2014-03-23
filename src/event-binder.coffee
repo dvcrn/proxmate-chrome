@@ -56,7 +56,11 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
 
       when 'setDonationkey'
         key = params.donationKey
-        Storage.set('donation_key', key)
+
+        if key?
+          Storage.set('donation_key', key)
+        else
+          Storage.remove('donation_key')
 
         require('runtime').restart()
         sendResponse true

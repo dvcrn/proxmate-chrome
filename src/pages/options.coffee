@@ -14,10 +14,17 @@ angular.module('optionsApp')
       )
 
     $scope.setDonationkey = (key, callback) ->
-      Chrome.setDonationkey(key, callback)
+      Chrome.setDonationkey(key, ->
+        $scope.fetchDonationkey(callback)
+      )
 
     $scope.fetchDonationkey = (callback) ->
       Chrome.getDonationkey (key) ->
+        if key?
+          $scope.hasDonationkey = true
+        else
+          $scope.hasDonationkey = false
+
         $scope.donationKey = key
         $scope.$digest()
 
@@ -33,6 +40,12 @@ angular.module('optionsApp')
           $scope.donationKeyStatus = data.message
       )
 
+    $scope.clearKey = ->
+      $scope.setDonationkey(null, ->
+        $scope.fetchDonationkey()
+      )
+
+    $scope.hasDonationkey = false
     $scope.donationKey = ''
     $scope.donationKeyStatus = ''
 
