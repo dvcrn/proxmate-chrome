@@ -65,12 +65,15 @@ a {
 	position: relative;
 }
 
-.package a {
+.package .remove {
 	color: red;
 	font-size: 5px;
 	right: 3px;
 	top: 3px;
 	position: absolute;
+	background: url('../../../ressources/images/delete.png') no-repeat;
+	height: 16px;
+	width: 16px;
 }
 
 .package:hover {

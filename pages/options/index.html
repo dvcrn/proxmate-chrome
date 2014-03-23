@@ -27,7 +27,7 @@
           <div class="package" ng-repeat="package in installedPackages">
             <img ng-src="{{ package.smallIcon }}" alt="">
             <p>{{ package.name }}</p>
-            <a href="#" ng-click="removePackage(package.id, package.name)">Remove</a>
+            <a href="#" class="remove" ng-click="removePackage(package.id, package.name)"></a>
           </div>
         </section>
         <section class="donate">
