@@ -66,13 +66,15 @@ define ['chrome'], (Chrome) ->
     # Parse all available information into if command blocks
     configLines = []
     i = 0
+
     for country, servers of countryServersMapping
       statement = 'else if'
       if i is 0
         statement = 'if'
 
-      conditions = "#{parsedRules[country].join(' || ')}"
-      configLines.push("#{statement} (#{conditions}) { return '#{exports.generateAndScrumbleServerString(servers)}' }")
+      if parsedRules[country]?
+        conditions = "#{parsedRules[country].join(' || ')}"
+        configLines.push("#{statement} (#{conditions}) { return '#{exports.generateAndScrumbleServerString(servers)}' }")
       i += 1
 
     # Add the last else case, if no proxy was found

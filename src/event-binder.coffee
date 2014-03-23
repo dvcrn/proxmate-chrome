@@ -58,6 +58,7 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
         key = params.donationKey
         Storage.set('donation_key', key)
 
+        require('runtime').restart()
         sendResponse true
 
     true

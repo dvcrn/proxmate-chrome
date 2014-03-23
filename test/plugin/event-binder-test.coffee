@@ -115,6 +115,7 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
         assert.isTrue(callback.calledWith('foo'))
 
     it 'should save the donation key into storage on setDonationkey', ->
+        runtimeStub = this.sandbox.stub(Runtime, 'restart')
         storageSetStub = this.sandbox.stub(Storage, 'set', (key) -> return 'foo')
         storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
         callback = this.sandbox.spy()
@@ -123,4 +124,5 @@ define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (Eve
 
         assert.isTrue(storageSetStub.calledWith('donation_key', 'foo'))
         assert.isTrue(callback.calledWith(true))
+        assert.isTrue(runtimeStub.calledOnce)
 
