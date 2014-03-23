@@ -58,8 +58,7 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
         key = params.donationKey
         Storage.set('donation_key', key)
 
-        if (Storage.get('donation_key') == key)
-          sendResponse true
+        sendResponse true
 
     true
 
