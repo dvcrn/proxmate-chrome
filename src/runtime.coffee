@@ -35,6 +35,9 @@ define [
   ###
   restart = ->
     exports.stop()
+    ServerManager.init( ->
+      PackageManager.init() # Since we want to fetch new packages / update the existing ones
+    )
     exports.start()
 
   ###*
