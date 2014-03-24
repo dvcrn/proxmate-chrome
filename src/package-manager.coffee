@@ -11,6 +11,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
     server = ConfigProvider.get('primary_server')
     updateUrl = "#{server}/package/update.json"
     if donationKey?
+      donationKey = encodeURIComponent(donationKey)
       updateUrl = "#{server}/package/update.json?key=#{donationKey}"
 
     $.get updateUrl, (data) ->
@@ -46,6 +47,7 @@ define ['storage', 'config', 'jquery'], (StorageManager, ConfigProvider, $) ->
     donationKey = StorageManager.get('donation_key')
     packageUrl = "#{server}/package/#{key}/install.json"
     if donationKey?
+      donationKey = encodeURIComponent(donationKey)
       packageUrl = "#{server}/package/#{key}/install.json?key=#{donationKey}"
 
     $.ajax packageUrl,
