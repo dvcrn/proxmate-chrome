@@ -69,21 +69,49 @@ define ['server-manager', 'config', 'storage', 'text!../testdata/servers.json'],
         assert.deepEqual(testServers, servers)
 
       it 'should ajax load the server list correctly and save in storage', ->
-          configGetStub = this.sandbox.stub(Config, 'get', ->
-            return 'www.abc.de'
-          )
+        configGetStub = this.sandbox.stub(Config, 'get', ->
+          return 'www.abc.de'
+        )
 
-          callback = this.sandbox.spy()
-          storageSetStub = this.sandbox.stub(Storage, 'set')
+        this.storageStub.restore()
+        storageGetStub = this.sandbox.stub(Storage, 'get', ->
+          return null
+        )
 
-          ServerManager.fetchServerList(callback)
+        callback = this.sandbox.spy()
+        storageSetStub = this.sandbox.stub(Storage, 'set')
 
-          assert.isTrue(configGetStub.calledWith('primary_server'))
-          assert.equal(1, this.sandbox.server.requests.length)
-          assert.equal("www.abc.de/server/list.json", this.sandbox.server.requests[0].url)
+        ServerManager.fetchServerList(callback)
 
-          this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
+        assert.isTrue(configGetStub.calledWith('primary_server'))
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal("www.abc.de/server/list.json", this.sandbox.server.requests[0].url)
 
-          assert.isTrue(callback.calledOnce)
-          assert.isTrue(storageSetStub.calledWith('server_config', testServers))
-          assert.deepEqual(testServers, ServerManager.getServers())
+        this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
+
+        assert.isTrue(callback.calledOnce)
+        assert.isTrue(storageSetStub.calledWith('server_config', testServers))
+        assert.deepEqual(testServers, ServerManager.getServers())
+        assert.isTrue(storageGetStub.calledOnce)
+
+      it 'should attach donation key if available', ->
+        configGetStub = this.sandbox.stub(Config, 'get', ->
+          return 'www.abc.de'
+        )
+
+        this.storageStub.restore()
+        storageGetStub = this.sandbox.stub(Storage, 'get', ->
+          return 'foo'
+        )
+
+        callback = this.sandbox.spy()
+        storageSetStub = this.sandbox.stub(Storage, 'set')
+
+        ServerManager.fetchServerList(callback)
+
+        assert.isTrue(configGetStub.calledWith('primary_server'))
+        assert.equal(1, this.sandbox.server.requests.length)
+        assert.equal("www.abc.de/server/list.json?key=foo", this.sandbox.server.requests[0].url)
+        this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
+
+        assert.isTrue(storageGetStub.calledOnce)

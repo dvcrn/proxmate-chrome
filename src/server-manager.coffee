@@ -26,8 +26,14 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
    * @param  {Function} callback Callback
   ###
   fetchServerList = (callback) ->
+    server = Config.get('primary_server')
+    donationKey = Storage.get('donation_key')
+    serverUrl = "#{server}/server/list.json"
+    if donationKey?
+      donationKey = encodeURIComponent(donationKey)
+      serverUrl = "#{server}/server/list.json?key=#{donationKey}"
 
-    $.get(Config.get('primary_server') + '/server/list.json', (data) ->
+    $.get(serverUrl, (data) ->
       servers = data
       Storage.set('server_config', servers)
       callback()
