@@ -39,6 +39,9 @@
     "load-grunt-tasks": "~0.4.0",
     "grunt-contrib-cssmin": "~0.9.0",
     "grunt-contrib-htmlmin": "~0.2.0",
-    "grunt-closurecompiler": "~0.9.9"
+    "grunt-closurecompiler": "~0.9.9",
+    "browserify": "^4.1.6",
+    "karma-browserify": "^0.2.1",
+    "grunt-browserify": "^2.1.0"
   }
 }

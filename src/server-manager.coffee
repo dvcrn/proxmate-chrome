@@ -1,31 +1,35 @@
-define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
-  servers = []
+{Storage} = require './storage'
+{Config} = require './config'
 
-  init = (callback) ->
-    servers = exports.loadServersFromStorage()
 
-    if servers.length > 0
-      exports.fetchServerList(->)
+class ServerManager
+  servers: []
+
+  init: (callback) ->
+    @servers = @loadServersFromStorage()
+
+    if @servers.length > 0
+      @fetchServerList(->)
       callback()
     else
-      exports.fetchServerList(callback)
+      @fetchServerList(callback)
 
   ###*
    * Load servers from storage into array
   ###
-  loadServersFromStorage = ->
+  loadServersFromStorage: ->
     tmpServers = Storage.get('server_config')
     if !tmpServers
       tmpServers = []
 
-    servers = tmpServers
-    return servers
+    @servers = tmpServers
+    return @servers
 
   ###*
    * Fetch a fresh server list from storage
    * @param  {Function} callback Callback
   ###
-  fetchServerList = (callback) ->
+  fetchServerList: (callback) ->
     server = Config.get('primary_server')
     donationKey = Storage.get('donation_key')
     serverUrl = "#{server}/server/list.json"
@@ -33,9 +37,9 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
       donationKey = encodeURIComponent(donationKey)
       serverUrl = "#{server}/server/list.json?key=#{donationKey}"
 
-    $.get(serverUrl, (data) ->
-      servers = data
-      Storage.set('server_config', servers)
+    $.get(serverUrl, (data) =>
+      @servers = data
+      Storage.set('server_config', @servers)
       callback()
     )
 
@@ -43,14 +47,7 @@ define ['storage', 'config', 'jquery'], (Storage, Config, $) ->
    * Return all servers
    * @return {Object} all servers
   ###
-  getServers = ->
-    return servers
+  getServers: ->
+    return @servers
 
-  exports = {
-    init: init
-    getServers: getServers
-    loadServersFromStorage: loadServersFromStorage
-    fetchServerList: fetchServerList
-  }
-
-  return exports
+exports.ServerManager = new ServerManager()

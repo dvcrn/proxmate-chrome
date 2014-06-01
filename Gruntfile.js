@@ -14,6 +14,13 @@ module.exports = function (grunt) {
                 singleRun: true,
             }
         },
+        browserify: {
+            src: {
+                files: {
+                    '.tmp/src/module.js': ['.tmp/src/*.js'],
+                }
+            }
+        },
         watch: {
             coffee: {
                 files: ['src/**/*.coffee'],
@@ -160,7 +167,8 @@ module.exports = function (grunt) {
         'clean:src',
         'coffee:src',
         'coffee:test',
-        'copy:src'
+        'copy:src',
+        'browserify:src'
     ])
 
     grunt.registerTask('build', [

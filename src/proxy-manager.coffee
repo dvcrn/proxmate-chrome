@@ -1,12 +1,14 @@
-define ['chrome'], (Chrome) ->
-  init = ->
+{Chrome} = require './chrome'
+
+class ProxyManager
+  init: ->
 
   ###*
    * Parses a routing config and returns a usable joined proxy string
    * @param  {Object} config the config to use
    * @return {String}        the proxy string
   ###
-  parseRoutingConfig = (config) ->
+  parseRoutingConfig: (config) ->
     configStrings = []
     # Parse startswith commands to shExpMatch(url, '*') expressions
     if config.startsWith.length > 0
@@ -28,7 +30,7 @@ define ['chrome'], (Chrome) ->
    * @param  {Array} serverArray the array of servers to join
    * @return {String}             the serverString
   ###
-  generateAndScrumbleServerString = (serverArray) ->
+  generateAndScrumbleServerString: (serverArray) ->
     for i in [serverArray.length-1..1]
         j = Math.floor Math.random() * (i + 1)
         [serverArray[i], serverArray[j]] = [serverArray[j], serverArray[i]]
@@ -41,7 +43,7 @@ define ['chrome'], (Chrome) ->
    * @param  {Array} servers  array out of server objects
    * @return {String}         The usable script
   ###
-  generateProxyAutoconfigScript = (packages, servers) ->
+  generateProxyAutoconfigScript: (packages, servers) ->
     countryServersMapping = {}
     # Transfer array into more usable object
     for server in servers
@@ -61,7 +63,7 @@ define ['chrome'], (Chrome) ->
 
         # Push all parsed routing elements into a object according to their mapped country
         for route in pkg.routing
-          parsedRules[pkg.country].push(exports.parseRoutingConfig(route))
+          parsedRules[pkg.country].push(@parseRoutingConfig(route))
 
     # Parse all available information into if command blocks
     configLines = []
@@ -74,7 +76,7 @@ define ['chrome'], (Chrome) ->
 
       if parsedRules[country]?
         conditions = "#{parsedRules[country].join(' || ')}"
-        configLines.push("#{statement} (#{conditions}) { return '#{exports.generateAndScrumbleServerString(servers)}' }")
+        configLines.push("#{statement} (#{conditions}) { return '#{@generateAndScrumbleServerString(servers)}' }")
       i += 1
 
     # Add the last else case, if no proxy was found
@@ -87,7 +89,7 @@ define ['chrome'], (Chrome) ->
    * @param {String}   pacScript the autoconfig string
    * @param {Function} callback  callback to execute after
   ###
-  setProxyAutoconfig = (pacScript, callback) ->
+  setProxyAutoconfig: (pacScript, callback) ->
     config =
         mode: "pac_script",
         pacScript:
@@ -102,16 +104,7 @@ define ['chrome'], (Chrome) ->
    * Removes all custom proxies and resets to system
    * @param  {Function} callback callback
   ###
-  clearProxy = (callback) ->
+  clearProxy: (callback) ->
     Chrome.proxy.settings.clear({}, callback);
 
-  exports = {
-    init: init
-    generateProxyAutoconfigScript: generateProxyAutoconfigScript
-    parseRoutingConfig: parseRoutingConfig
-    generateAndScrumbleServerString: generateAndScrumbleServerString
-    setProxyAutoconfig: setProxyAutoconfig
-    clearProxy: clearProxy
-  }
-
-  return exports
+exports.ProxyManager = new ProxyManager()

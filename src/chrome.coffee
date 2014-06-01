@@ -1,30 +1,27 @@
-define [], ->
-  init = ->
+class Chrome
+  init: ->
 
-  exports = {
-    init: init
+  storage:
+    local:
+      set: chrome.storage.local.set
+      get: chrome.storage.local.get
+      remove: chrome.storage.local.remove
 
-    storage:
-      local:
-        set: chrome.storage.local.set
-        get: chrome.storage.local.get
-        remove: chrome.storage.local.remove
+  proxy:
+    settings:
+      set: chrome.proxy.settings.set
+      clear: chrome.proxy.settings.clear
 
-    proxy:
-      settings:
-        set: chrome.proxy.settings.set
-        clear: chrome.proxy.settings.clear
+  runtime:
+    onMessage:
+      addListener: chrome.runtime.onMessage.addListener
 
-    runtime:
-      onMessage:
-        addListener: chrome.runtime.onMessage.addListener
+  browserAction:
+    setBadgeText: chrome.browserAction.setBadgeText
+    setIcon: chrome.browserAction.setIcon
 
-    browserAction:
-      setBadgeText: chrome.browserAction.setBadgeText
-      setIcon: chrome.browserAction.setIcon
-  }
 
-  if chrome.app
-    return chrome
-  else
-    return exports
+if chrome.app
+  exports.Chrome = chrome
+else
+  exports.Chrome = new Chrome()

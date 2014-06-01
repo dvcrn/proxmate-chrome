@@ -1,19 +1,19 @@
-define [
-  'package-manager',
-  'server-manager',
-  'proxy-manager',
-  'storage',
-  'chrome'
-], (PackageManager, ServerManager, ProxyManager, Storage, Chrome) ->
-  init = ->
+{PackageManager} = require './package-manager'
+{ServerManager} = require './server-manager'
+{ProxyManager} = require './proxy-manager'
+{Storage} = require './storage'
+{Chrome} = require './chrome'
+
+class Runtime
+  init: ->
 
   ###*
    * Starts the app. Retrieves servers and sets pac
   ###
-  start = ->
+  start: ->
     globalStatus = Storage.get('global_status')
     if not globalStatus
-      exports.stop()
+      @stop()
       return
 
     Chrome.browserAction.setIcon({path: "ressources/images/icon48.png"});
@@ -33,26 +33,19 @@ define [
   ###*
    * Restarts application flow. This means the app is already running and now getting started again.
   ###
-  restart = ->
-    exports.stop()
+  restart: ->
+    @stop()
     ServerManager.init( ->
       PackageManager.init() # Since we want to fetch new packages / update the existing ones
     )
-    exports.start()
+    @start()
 
   ###*
    * Removed the proxy from chrome
   ###
-  stop = ->
+  stop: ->
     Chrome.browserAction.setBadgeText({text: "Off"})
     Chrome.browserAction.setIcon({path: "ressources/images/icon48_grey.png"});
     ProxyManager.clearProxy()
 
-  exports = {
-    init: init
-    start: start
-    restart: restart
-    stop: stop
-  }
-
-  return exports
+exports.Runtime = new Runtime()

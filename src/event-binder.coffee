@@ -1,6 +1,11 @@
-define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageManager, Storage, Runtime) ->
-  init = ->
-    Chrome.runtime.onMessage.addListener exports.messageListener
+{Chrome} = require './chrome'
+{PackageManager} = require './package-manager'
+{Storage} = require './storage'
+{Runtime} = require './runtime'
+
+class EventBinder
+  init: ->
+    Chrome.runtime.onMessage.addListener @messageListener
 
   ###*
    * Event listener for chrome message events
@@ -9,7 +14,7 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
    * @param  {Function} sendResponse callback to emit answer back to frontend
    * @return {boolean}              status whether to keep the connection open or not
   ###
-  messageListener = (request, sender, sendResponse) ->
+  messageListener: (request, sender, sendResponse) ->
     params = request.params
 
     switch request.action
@@ -62,14 +67,10 @@ define ['chrome', 'package-manager', 'storage', 'runtime'], (Chrome, PackageMana
         else
           Storage.remove('donation_key')
 
-        require('runtime').restart()
+        {Runtime} = require('./runtime')
+        Runtime.restart()
         sendResponse true
 
     true
 
-  exports = {
-    init: init
-    messageListener: messageListener
-  }
-
-  return exports
+exports.EventBinder = new EventBinder()
