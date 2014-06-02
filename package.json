@@ -42,6 +42,7 @@
     "grunt-closurecompiler": "~0.9.9",
     "browserify": "^4.1.6",
     "karma-browserify": "^0.2.1",
-    "grunt-browserify": "^2.1.0"
+    "grunt-browserify": "^2.1.0",
+    "karma-commonjs": "0.0.8"
   }
 }

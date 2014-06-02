@@ -9,19 +9,15 @@ module.exports = function(config) {
 
 
     // frameworks to use
-    frameworks: ['mocha', 'requirejs', 'sinon-chai'],
+    frameworks: ['browserify', 'mocha', 'sinon-chai'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'test/bootstrap.js',
+      {pattern: 'bower_components/jquery/dist/jquery.js', included: true},
+      {pattern: 'test/testdata/**/*.json', included: true},
 
-      {pattern: 'test/plugin/*-test.js', included: false},
-      {pattern: 'src/**/*.js', included: false},
-      {pattern: 'test/testdata/**/*.json', included: false},
-
-      {pattern: 'bower_components/jquery/dist/jquery.js', included: false},
-      {pattern: 'bower_components/requirejs-text/text.js', included: false}
+      {pattern: 'test/app.js', included: true},
     ],
 
 
@@ -29,6 +25,11 @@ module.exports = function(config) {
     exclude: [
 
     ],
+
+    preprocessors: {
+      // 'src/*.js': ['browserify'],
+      // 'test/plugin/*.js': ['browserify']
+    },
 
 
     // test results reporter to use

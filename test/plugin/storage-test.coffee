@@ -1,98 +1,99 @@
-# The testsuite
-define ['storage', 'chrome'], (StorageModule, Chrome) ->
-  describe 'Storage', ->
+{Storage} = require '../../src/storage'
+{Chrome} = require '../../src/chrome'
 
-    beforeEach ->
-      this.sandbox = sinon.sandbox.create()
-      this.storageSetStub = this.sandbox.stub(Chrome.storage.local, 'set')
-      this.storageGetStub = this.sandbox.stub(Chrome.storage.local, 'get')
+describe 'Storage', ->
 
-      this.clock = this.sandbox.useFakeTimers()
+  beforeEach ->
+    this.sandbox = sinon.sandbox.create()
+    this.storageSetStub = this.sandbox.stub(Chrome.storage.local, 'set')
+    this.storageGetStub = this.sandbox.stub(Chrome.storage.local, 'get')
 
+    this.clock = this.sandbox.useFakeTimers()
+
+  afterEach ->
+    this.sandbox.restore()
+
+  # Testing flush first, since it will be used in all other tests here
+  describe 'Testing flush', ->
+    Storage.set('123', 5678)
+    Storage.flush()
+    assert.equal(null, Storage.get('123'))
+
+  describe 'Testing get/set', ->
     afterEach ->
-      this.sandbox.restore()
+      Storage.flush()
 
-    # Testing flush first, since it will be used in all other tests here
-    describe 'Testing flush', ->
-      StorageModule.set('123', 5678)
-      StorageModule.flush()
-      assert.equal(null, StorageModule.get('123'))
+    it 'should set and return values correctly', ->
+      testValue = 12345
+      testArray = [1,2,3,4,5]
+      testString = '12345asdf'
 
-    describe 'Testing get/set', ->
-      afterEach ->
-        StorageModule.flush()
+      Storage.set('test', testValue)
+      assert.equal(testValue, Storage.get('test'))
 
-      it 'should set and return values correctly', ->
-        testValue = 12345
-        testArray = [1,2,3,4,5]
-        testString = '12345asdf'
+      Storage.set('test', testArray)
+      assert.equal(testArray, Storage.get('test'))
 
-        StorageModule.set('test', testValue)
-        assert.equal(testValue, StorageModule.get('test'))
+      Storage.set('test', testString)
+      assert.equal(testString, Storage.get('test'))
 
-        StorageModule.set('test', testArray)
-        assert.equal(testArray, StorageModule.get('test'))
+    it 'should return null on missing keys', ->
+      assert.equal(null, Storage.get('abcasdfasdfasdfkasdfjasdf'))
 
-        StorageModule.set('test', testString)
-        assert.equal(testString, StorageModule.get('test'))
+    it 'should call chrome.storage.local after 1000 ms', ->
+      Storage.set(123, 'hallo')
+      Storage.set(456, 'wuhu')
 
-      it 'should return null on missing keys', ->
-        assert.equal(null, StorageModule.get('abcasdfasdfasdfkasdfjasdf'))
+      # Check if the storage function has been called alrady
+      assert.isFalse(this.storageSetStub.calledOnce)
 
-      it 'should call chrome.storage.local after 1000 ms', ->
-        StorageModule.set(123, 'hallo')
-        StorageModule.set(456, 'wuhu')
+      this.clock.tick(1000)
+      expectedPayload =
+        123: 'hallo'
+        456: 'wuhu'
 
-        # Check if the storage function has been called alrady
-        assert.isFalse(this.storageSetStub.calledOnce)
+      assert.isTrue(this.storageSetStub.calledWith(expectedPayload))
 
-        this.clock.tick(1000)
-        expectedPayload =
-          123: 'hallo'
-          456: 'wuhu'
+    it 'should init the module correctly', ->
+      expectedStorageContent =
+        123: 456
+        'asdf': 'muh'
+        8888: 9999999
 
-        assert.isTrue(this.storageSetStub.calledWith(expectedPayload))
+      this.storageGetStub.restore()
+      stub = this.sandbox.stub(Chrome.storage.local, 'get', (key, callback) ->
+        callback expectedStorageContent
+      )
 
-      it 'should init the module correctly', ->
-        expectedStorageContent =
-          123: 456
-          'asdf': 'muh'
-          8888: 9999999
+      callback = this.sandbox.spy()
+      Storage.init(callback)
 
-        this.storageGetStub.restore()
-        stub = this.sandbox.stub(Chrome.storage.local, 'get', (key, callback) ->
-          callback expectedStorageContent
-        )
+      assert.isTrue(callback.calledOnce, 'Callback executed correctly')
+      assert.isTrue(stub.calledOnce)
+      assert.equal(456, Storage.get(123))
+      assert.equal('muh', Storage.get('asdf'))
+      assert.equal(9999999, Storage.get(8888))
 
-        callback = this.sandbox.spy()
-        StorageModule.init(callback)
+      # If we didn't have global_status in the storage yet, it should be true
+      assert.equal(true, Storage.get('global_status'))
 
-        assert.isTrue(callback.calledOnce, 'Callback executed correctly')
-        assert.isTrue(stub.calledOnce)
-        assert.equal(456, StorageModule.get(123))
-        assert.equal('muh', StorageModule.get('asdf'))
-        assert.equal(9999999, StorageModule.get(8888))
+  describe 'Testing Remove', ->
+    it 'should remove a key correctly and write into chrome storage', ->
+      stub = this.sandbox.stub(Chrome.storage.local, 'remove')
 
-        # If we didn't have global_status in the storage yet, it should be true
-        assert.equal(true, StorageModule.get('global_status'))
+      Storage.set('asdf', 123)
+      Storage.set('asdf2', 123)
+      Storage.set('asdf3', 123)
 
-    describe 'Testing Remove', ->
-      it 'should remove a key correctly and write into chrome storage', ->
-        stub = this.sandbox.stub(Chrome.storage.local, 'remove')
+      assert.equal(123, Storage.get('asdf'))
+      assert.equal(123, Storage.get('asdf2'))
+      assert.equal(123, Storage.get('asdf3'))
 
-        StorageModule.set('asdf', 123)
-        StorageModule.set('asdf2', 123)
-        StorageModule.set('asdf3', 123)
+      Storage.remove('asdf')
+      assert.isTrue(stub.calledWith('asdf'))
+      assert.equal(null, Storage.get('asdf'))
+      assert.equal(123, Storage.get('asdf2'))
+      assert.equal(123, Storage.get('asdf3'))
 
-        assert.equal(123, StorageModule.get('asdf'))
-        assert.equal(123, StorageModule.get('asdf2'))
-        assert.equal(123, StorageModule.get('asdf3'))
-
-        StorageModule.remove('asdf')
-        assert.isTrue(stub.calledWith('asdf'))
-        assert.equal(null, StorageModule.get('asdf'))
-        assert.equal(123, StorageModule.get('asdf2'))
-        assert.equal(123, StorageModule.get('asdf3'))
-
-        this.clock.tick(1000)
-        assert.isTrue(this.storageSetStub.calledWith({'asdf2': 123, 'asdf3': 123}))
+      this.clock.tick(1000)
+      assert.isTrue(this.storageSetStub.calledWith({'asdf2': 123, 'asdf3': 123}))

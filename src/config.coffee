@@ -1,4 +1,4 @@
-configJson = require '../../proxmate.json'
+configJson = require '../proxmate.json'
 
 class Config
   config: {}

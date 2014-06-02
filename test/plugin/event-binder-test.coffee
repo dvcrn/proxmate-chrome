@@ -1,139 +1,144 @@
-define ['event-binder', 'chrome', 'package-manager', 'storage', 'runtime'], (EventBinder, Chrome, PackageManager, Storage, Runtime) ->
-  describe 'Event Binder ', ->
+{EventBinder} = require '../../src/event-binder'
+{Chrome} = require '../../src/chrome'
+{PackageManager} = require '../../src/package-manager'
+{Storage} = require '../../src/storage'
+{Runtime} = require '../../src/runtime'
 
-    beforeEach ->
-      this.sandbox = sinon.sandbox.create()
+describe 'Event Binder ', ->
 
-    afterEach ->
-      this.sandbox.restore()
+  beforeEach ->
+    this.sandbox = sinon.sandbox.create()
 
-    it 'shold bind chrome message events on init', ->
-      bindMessageEventStub = this.sandbox.stub(Chrome.runtime.onMessage, 'addListener')
-      messageListenerStub = this.sandbox.stub(EventBinder, 'messageListener')
-      EventBinder.init()
+  afterEach ->
+    this.sandbox.restore()
 
-      assert.isTrue(bindMessageEventStub.calledWith(messageListenerStub))
+  it 'shold bind chrome message events on init', ->
+    bindMessageEventStub = this.sandbox.stub(Chrome.runtime.onMessage, 'addListener')
+    messageListenerStub = this.sandbox.stub(EventBinder, 'messageListener')
+    EventBinder.init()
 
-    describe 'event behaviour', ->
-      it 'should call packageManager.installpackage on installPackage event', ->
-        callback = this.sandbox.spy()
-        installPackageStub = this.sandbox.stub(PackageManager, 'installPackage', (id, callback) ->
-          callback()
-        )
+    assert.isTrue(bindMessageEventStub.calledWith(messageListenerStub))
 
-        flag = EventBinder.messageListener({action: 'installPackage', params: {packageId: 'asdf'}}, {}, callback)
+  describe 'event behaviour', ->
+    it 'should call packageManager.installpackage on installPackage event', ->
+      callback = this.sandbox.spy()
+      installPackageStub = this.sandbox.stub(PackageManager, 'installPackage', (id, callback) ->
+        callback()
+      )
 
-        assert.isTrue(flag)
-        assert.isTrue(installPackageStub.calledWith('asdf'))
-        assert.isTrue(callback.calledOnce)
+      flag = EventBinder.messageListener({action: 'installPackage', params: {packageId: 'asdf'}}, {}, callback)
 
-      it 'should retrieve storage content on getProxmateGlobalStatus event', ->
-        callback = this.sandbox.spy()
-        storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return true)
+      assert.isTrue(flag)
+      assert.isTrue(installPackageStub.calledWith('asdf'))
+      assert.isTrue(callback.calledOnce)
 
-        flag = EventBinder.messageListener({action: 'getProxmateGlobalStatus', params: {}}, {}, callback)
+    it 'should retrieve storage content on getProxmateGlobalStatus event', ->
+      callback = this.sandbox.spy()
+      storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return true)
 
-        assert.isTrue(storageGetStub.calledWith('global_status'))
-        assert.isTrue(callback.calledWith(true))
+      flag = EventBinder.messageListener({action: 'getProxmateGlobalStatus', params: {}}, {}, callback)
 
-        # Storage not defined yet
-        storageGetStub.restore()
-        callback = this.sandbox.spy()
-        storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
-          return null
-        )
+      assert.isTrue(storageGetStub.calledWith('global_status'))
+      assert.isTrue(callback.calledWith(true))
 
-        flag = EventBinder.messageListener({action: 'getProxmateGlobalStatus', params: {}}, {}, callback)
+      # Storage not defined yet
+      storageGetStub.restore()
+      callback = this.sandbox.spy()
+      storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
+        return null
+      )
 
-        assert.isTrue(storageGetStub.calledWith('global_status'))
-        assert.isTrue(callback.calledWith(false))
+      flag = EventBinder.messageListener({action: 'getProxmateGlobalStatus', params: {}}, {}, callback)
+
+      assert.isTrue(storageGetStub.calledWith('global_status'))
+      assert.isTrue(callback.calledWith(false))
 
 
-      it 'should set the proxmate status correctly on setProxmateGlobalStatus', ->
-        callback = this.sandbox.spy()
-        storageSetStub = this.sandbox.stub(Storage, 'set')
-        startStub = this.sandbox.stub(Runtime, 'start')
-        stopStub = this.sandbox.stub(Runtime, 'stop')
+    it 'should set the proxmate status correctly on setProxmateGlobalStatus', ->
+      callback = this.sandbox.spy()
+      storageSetStub = this.sandbox.stub(Storage, 'set')
+      startStub = this.sandbox.stub(Runtime, 'start')
+      stopStub = this.sandbox.stub(Runtime, 'stop')
 
-        # True
-        flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: true}}, {}, callback)
-        assert.isTrue(storageSetStub.calledWith('global_status', true))
-        assert.isTrue(callback.calledOnce)
-        assert.isTrue(startStub.calledOnce)
+      # True
+      flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: true}}, {}, callback)
+      assert.isTrue(storageSetStub.calledWith('global_status', true))
+      assert.isTrue(callback.calledOnce)
+      assert.isTrue(startStub.calledOnce)
 
-        storageSetStub.restore()
-        callback = this.sandbox.spy()
-        storageSetStub = this.sandbox.stub(Storage, 'set')
+      storageSetStub.restore()
+      callback = this.sandbox.spy()
+      storageSetStub = this.sandbox.stub(Storage, 'set')
 
-        # False
-        flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: false}}, {}, callback)
-        assert.isTrue(storageSetStub.calledWith('global_status', false))
-        assert.isTrue(callback.calledOnce)
-        assert.isTrue(stopStub.calledOnce)
+      # False
+      flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: false}}, {}, callback)
+      assert.isTrue(storageSetStub.calledWith('global_status', false))
+      assert.isTrue(callback.calledOnce)
+      assert.isTrue(stopStub.calledOnce)
 
-        storageSetStub.restore()
-        callback = this.sandbox.spy()
-        storageSetStub = this.sandbox.stub(Storage, 'set')
+      storageSetStub.restore()
+      callback = this.sandbox.spy()
+      storageSetStub = this.sandbox.stub(Storage, 'set')
 
-        # something not bool
-        flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: 'asdf'}}, {}, callback)
-        assert.isTrue(storageSetStub.calledWith('global_status', false))
-        assert.isTrue(callback.calledOnce)
-        assert.isTrue(stopStub.calledTwice)
+      # something not bool
+      flag = EventBinder.messageListener({action: 'setProxmateGlobalStatus', params: {newStatus: 'asdf'}}, {}, callback)
+      assert.isTrue(storageSetStub.calledWith('global_status', false))
+      assert.isTrue(callback.calledOnce)
+      assert.isTrue(stopStub.calledTwice)
 
-    it 'should return all installed packages on getInstalledPackages', ->
-        returnObject = {1: 2}
-        packageManagerStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
-            return returnObject
-        )
-        callback = this.sandbox.spy()
+  it 'should return all installed packages on getInstalledPackages', ->
+      returnObject = {1: 2}
+      packageManagerStub = this.sandbox.stub(PackageManager, 'getInstalledPackages', ->
+          return returnObject
+      )
+      callback = this.sandbox.spy()
 
-        EventBinder.messageListener({action: 'getInstalledPackages', params: {}}, {}, callback)
+      EventBinder.messageListener({action: 'getInstalledPackages', params: {}}, {}, callback)
 
-        assert.isTrue(packageManagerStub.calledOnce)
-        assert.isTrue(callback.calledOnce)
-        assert.isTrue(callback.calledWith(returnObject))
+      assert.isTrue(packageManagerStub.calledOnce)
+      assert.isTrue(callback.calledOnce)
+      assert.isTrue(callback.calledWith(returnObject))
 
-    it 'should call removePackage on removePackage', ->
-        packageManagerStub = this.sandbox.stub(PackageManager, 'removePackage')
-        callback = this.sandbox.spy()
+  it 'should call removePackage on removePackage', ->
+      packageManagerStub = this.sandbox.stub(PackageManager, 'removePackage')
+      callback = this.sandbox.spy()
 
-        EventBinder.messageListener({action: 'removePackage', params: {packageId: 'asdf'}}, {}, callback)
+      EventBinder.messageListener({action: 'removePackage', params: {packageId: 'asdf'}}, {}, callback)
 
-        assert.isTrue(callback.calledOnce)
+      assert.isTrue(callback.calledOnce)
 
-        assert.isTrue(packageManagerStub.calledWith('asdf'))
-        assert.isTrue(packageManagerStub.calledOnce)
+      assert.isTrue(packageManagerStub.calledWith('asdf'))
+      assert.isTrue(packageManagerStub.calledOnce)
 
-    it 'should retrieve info from storage on getDonationkey', ->
-        storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
-        callback = this.sandbox.spy()
+  it 'should retrieve info from storage on getDonationkey', ->
+      storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
+      callback = this.sandbox.spy()
 
-        EventBinder.messageListener({action: 'getDonationkey', params: {}}, {}, callback)
+      EventBinder.messageListener({action: 'getDonationkey', params: {}}, {}, callback)
 
-        assert.isTrue(storageGetStub.calledWith('donation_key'))
-        assert.isTrue(callback.calledWith('foo'))
+      assert.isTrue(storageGetStub.calledWith('donation_key'))
+      assert.isTrue(callback.calledWith('foo'))
 
-    it 'should save the donation key into storage on setDonationkey', ->
-        runtimeStub = this.sandbox.stub(Runtime, 'restart')
-        storageSetStub = this.sandbox.stub(Storage, 'set', (key) -> return 'foo')
-        storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
-        callback = this.sandbox.spy()
+  it 'should save the donation key into storage on setDonationkey', ->
+      runtimeStub = this.sandbox.stub(Runtime, 'restart')
+      storageSetStub = this.sandbox.stub(Storage, 'set', (key) -> return 'foo')
+      storageGetStub = this.sandbox.stub(Storage, 'get', (key) -> return 'foo')
+      callback = this.sandbox.spy()
 
-        EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: 'foo'}}, {}, callback)
+      EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: 'foo'}}, {}, callback)
 
-        assert.isTrue(storageSetStub.calledWith('donation_key', 'foo'))
-        assert.isTrue(callback.calledWith(true))
-        assert.isTrue(runtimeStub.calledOnce)
+      assert.isTrue(storageSetStub.calledWith('donation_key', 'foo'))
+      assert.isTrue(callback.calledWith(true))
+      assert.isTrue(runtimeStub.calledOnce)
 
-    it 'should remove donation key if setDonationkey is null', ->
-        runtimeStub = this.sandbox.stub(Runtime, 'restart')
-        storageRemoveStub = this.sandbox.stub(Storage, 'remove', (key) -> return 'foo')
-        callback = this.sandbox.spy()
+  it 'should remove donation key if setDonationkey is null', ->
+      runtimeStub = this.sandbox.stub(Runtime, 'restart')
+      storageRemoveStub = this.sandbox.stub(Storage, 'remove', (key) -> return 'foo')
+      callback = this.sandbox.spy()
 
-        EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: null}}, {}, callback)
+      EventBinder.messageListener({action: 'setDonationkey', params: {donationKey: null}}, {}, callback)
 
-        assert.isTrue(storageRemoveStub.calledWith('donation_key'))
-        assert.isTrue(callback.calledWith(true))
-        assert.isTrue(runtimeStub.calledOnce)
+      assert.isTrue(storageRemoveStub.calledWith('donation_key'))
+      assert.isTrue(callback.calledWith(true))
+      assert.isTrue(runtimeStub.calledOnce)
 

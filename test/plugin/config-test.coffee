@@ -1,26 +1,7 @@
-define 'TextMock', ->
-  return {
-    load: (path, req, onLoad, config) ->
-      returnArray = {
-        "primary_server": "http://127.0.0.1/"
-      }
-      onLoad(JSON.stringify(returnArray))
-  }
+{Config} = require '../../src/config'
 
-require.config
-  map:
-    'config':
-      'text': 'TextMock'
+describe 'Config loader', ->
 
-define ['config'], (ConfigProvider) ->
-  describe 'Config loader', ->
-
-    after ->
-      require.config({map: {}})
-      require.undef('TextMock')
-
-
-    it 'should return config content correctly', ->
-      # We'll not test the text plugin here. We assume it works.
-      ConfigProvider.init()
-      assert.equal('http://127.0.0.1/', ConfigProvider.get('primary_server'))
+  it 'should return config content correctly', ->
+    Config.init()
+    assert.equal('http://api.proxmate.me', Config.get('primary_server'))

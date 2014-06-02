@@ -17,7 +17,12 @@ module.exports = function (grunt) {
         browserify: {
             src: {
                 files: {
-                    '.tmp/src/module.js': ['.tmp/src/*.js'],
+                    '.tmp/src/app.js': ['.tmp/src/*.js'],
+                }
+            },
+            test: {
+                files: {
+                    '.tmp/test/app.js': ['.tmp/src/*.js', '.tmp/test/plugin/*.js'],
                 }
             }
         },
@@ -168,7 +173,8 @@ module.exports = function (grunt) {
         'coffee:src',
         'coffee:test',
         'copy:src',
-        'browserify:src'
+        'browserify:src',
+        'browserify:test'
     ])
 
     grunt.registerTask('build', [

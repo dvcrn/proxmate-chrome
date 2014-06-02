@@ -3,25 +3,25 @@ class Chrome
 
   storage:
     local:
-      set: chrome.storage.local.set
-      get: chrome.storage.local.get
-      remove: chrome.storage.local.remove
+      set: ->
+      get: ->
+      remove: ->
 
   proxy:
     settings:
-      set: chrome.proxy.settings.set
-      clear: chrome.proxy.settings.clear
+      set: ->
+      clear: ->
 
   runtime:
     onMessage:
-      addListener: chrome.runtime.onMessage.addListener
+      addListener: ->
 
   browserAction:
-    setBadgeText: chrome.browserAction.setBadgeText
-    setIcon: chrome.browserAction.setIcon
+    setBadgeText: ->
+    setIcon: ->
 
 
-if chrome.app
+if chrome? and chrome.app?
   exports.Chrome = chrome
 else
   exports.Chrome = new Chrome()
