@@ -17,12 +17,17 @@ module.exports = function (grunt) {
         browserify: {
             src: {
                 files: {
-                    '.tmp/src/app.js': ['.tmp/src/*.js'],
+                    '.tmp/src/app.js': ['.build/src/*.js'],
                 }
             },
             test: {
                 files: {
-                    '.tmp/test/app.js': ['.tmp/src/*.js', '.tmp/test/plugin/*.js'],
+                    '.tmp/test/test.js': ['.tmp/src/*.js', '.tmp/test/plugin/*.js'],
+                }
+            },
+            dist: {
+                files: {
+                    'dist/src/app.js': ['.build/src/*.js'],
                 }
             }
         },
@@ -56,14 +61,14 @@ module.exports = function (grunt) {
             dist: {
                 expand: true,
                 src: ['src/**/*.coffee'],
-                dest: 'dist/',
+                dest: '.build/',
                 ext: '.js'
             }
         },
         ngmin: {
             dist: {
                 files: [
-                    {expand: true, src: ['dist/src/pages/**/*.js'], dest: ''},
+                    {expand: true, src: ['.build/src/pages/**/*.js'], dest: ''},
                 ]
             }
         },
@@ -129,41 +134,44 @@ module.exports = function (grunt) {
         copy: {
             src: {
                 files: [{
-                        '.tmp/manifest.json': 'manifest.json',
                         '.tmp/proxmate.json': 'proxmate.json',
+                        '.tmp/manifest.json': 'manifest.json',
                         '.tmp/background.html': 'background.html',
                         '.tmp/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.js',
                         '.tmp/bower_components/angular/angular.js': 'bower_components/angular/angular.js',
                         '.tmp/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.js',
-                        '.tmp/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
-                        '.tmp/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js',
-
                         '.tmp/bower_components/angular-mocks/angular-mocks.js': 'bower_components/angular-mocks/angular-mocks.js'
                     },
                     {expand: true, src: ['test/testdata/**'], dest: '.tmp/'},
                     {expand: true, src: ['ressources/**'], dest: '.tmp/'},
-                    {expand: true, src: ['pages/**'], dest: '.tmp/'}
+                    {expand: true, src: ['pages/**'], dest: '.tmp/'},
                 ]
+            },
+            build: {
+                files: [{
+                    '.build/proxmate.json': 'proxmate.json',
+                    '.build/manifest.json': 'manifest.json',
+                }]
             },
             dist: {
                 files: [{
                         'dist/manifest.json': 'manifest.json',
-                        'dist/proxmate.json': 'proxmate.json',
                         'dist/background.html': 'background.html',
                         'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
                         'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
                         'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
-                        'dist/bower_components/requirejs/require.js': 'bower_components/requirejs/require.js',
-                        'dist/bower_components/requirejs-text/text.js': 'bower_components/requirejs-text/text.js'
                     },
+
                     {expand: true, src: ['ressources/**'], dest: 'dist/'},
-                    {expand: true, src: ['pages/**'], dest: 'dist/'}
+                    {expand: true, src: ['pages/**'], dest: 'dist/'},
+                    {expand: true, src: ['pages/**', 'page-worker/**'], dest: 'dist/src', cwd: '.build/src'},
                 ]
             }
         },
         clean: {
             src: '.tmp',
-            dist: 'dist'
+            dist: 'dist',
+            build: '.build'
         }
     });
 
@@ -178,13 +186,20 @@ module.exports = function (grunt) {
     ])
 
     grunt.registerTask('build', [
+        'clean:build',
         'clean:dist',
+
         'coffee:dist',
+
+        'copy:build',
         'copy:dist',
+
         'ngmin:dist',
+        'browserify:dist',
         'closurecompiler:dist',
         'cssmin:dist',
-        'htmlmin:dist'
+        'htmlmin:dist',
+        'clean:build'
     ])
 
     grunt.registerTask('serve', ['src', 'watch'])

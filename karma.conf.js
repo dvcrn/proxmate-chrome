@@ -15,9 +15,9 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       {pattern: 'bower_components/jquery/dist/jquery.js', included: true},
-      {pattern: 'test/testdata/**/*.json', included: true},
 
-      {pattern: 'test/app.js', included: true},
+      {pattern: 'test/testdata/**/*.json', included: true},
+      {pattern: 'test/test.js', included: true},
     ],
 
 
