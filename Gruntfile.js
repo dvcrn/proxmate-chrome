@@ -70,6 +70,11 @@ module.exports = function (grunt) {
                 files: [
                     {expand: true, src: ['dist/src/pages/**/*.js'], dest: ''},
                 ]
+            },
+            build: {
+                files: [
+                    {expand: true, src: ['.build/src/pages/**/*.js'], dest: ''},
+                ]
             }
         },
         uglify: {
@@ -164,6 +169,7 @@ module.exports = function (grunt) {
 
                     {expand: true, src: ['ressources/**'], dest: 'dist/'},
                     {expand: true, src: ['pages/**'], dest: 'dist/'},
+                    // Copy content from .build folder into dist/
                     {expand: true, src: ['pages/**', 'page-worker/**'], dest: 'dist/src', cwd: '.build/src'},
                 ]
             }
@@ -192,8 +198,8 @@ module.exports = function (grunt) {
         'coffee:dist',
 
         'copy:build',
+        'ngmin:build',
         'copy:dist',
-        'ngmin:dist',
 
         'browserify:dist',
         'uglify:dist',
