@@ -62,4 +62,11 @@ class Browser
   retrieveFromStorage: (key, callback) ->
     Chrome.storage.local.get(key, callback)
 
+  ###*
+   * Add a event listener for the message event
+   * @param  {function} listener listener function
+  ###
+  addEventListener: (listener) ->
+    Chrome.runtime.onMessage.addListener listener
+
 exports.Browser = new Browser()

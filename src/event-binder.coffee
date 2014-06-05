@@ -1,11 +1,11 @@
-{Chrome} = require './chrome'
+{Browser} = require './browser'
 {PackageManager} = require './package-manager'
 {Storage} = require './storage'
 {Runtime} = require './runtime'
 
 class EventBinder
   init: ->
-    Chrome.runtime.onMessage.addListener @messageListener
+    Browser.addEventListener(@messageListener)
 
   ###*
    * Event listener for chrome message events
