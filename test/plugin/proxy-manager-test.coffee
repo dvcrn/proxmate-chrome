@@ -1,5 +1,5 @@
 {ProxyManager} = require '../../src/proxy-manager'
-{Chrome} = require '../../src/chrome'
+{Browser} = require '../../src/browser'
 
 testPackages = require '../testdata/packages.json'
 testServers = require '../testdata/servers.json'
@@ -8,8 +8,8 @@ describe 'Proxy Manager', ->
   beforeEach ->
     this.sandbox = sinon.sandbox.create()
 
-    this.proxyClearStub = this.sandbox.stub(Chrome.proxy.settings, 'clear')
-    this.proxySetStub = this.sandbox.stub(Chrome.proxy.settings, 'set')
+    this.proxyClearStub = this.sandbox.stub(Browser, 'clearProxy')
+    this.proxySetStub = this.sandbox.stub(Browser, 'setProxyAutoconfig')
 
   afterEach ->
     this.sandbox.restore()
@@ -77,17 +77,10 @@ describe 'Proxy Manager', ->
     it 'should set the proxy correctly', ->
       proxyString = 'asdf'
 
-      expectedPayload =
-        value:
-          mode: "pac_script",
-          pacScript:
-            data: 'asdf',
-        scope: 'regular'
-
       ProxyManager.setProxyAutoconfig(proxyString)
 
       assert.isTrue(this.proxySetStub.calledOnce)
-      assert.isTrue(this.proxySetStub.calledWith(expectedPayload))
+      assert.isTrue(this.proxySetStub.calledWith(proxyString))
 
       ProxyManager.clearProxy()
       assert.isTrue(this.proxyClearStub.calledOnce)

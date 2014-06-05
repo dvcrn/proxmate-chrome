@@ -1,12 +1,13 @@
 {Storage} = require '../../src/storage'
 {Chrome} = require '../../src/chrome'
+{Browser} = require '../../src/browser'
 
 describe 'Storage', ->
 
   beforeEach ->
     this.sandbox = sinon.sandbox.create()
-    this.storageSetStub = this.sandbox.stub(Chrome.storage.local, 'set')
-    this.storageGetStub = this.sandbox.stub(Chrome.storage.local, 'get')
+    this.storageSetStub = this.sandbox.stub(Browser, 'writeIntoStorage')
+    this.storageGetStub = this.sandbox.stub(Browser, 'retrieveFromStorage')
 
     this.clock = this.sandbox.useFakeTimers()
 
@@ -61,7 +62,7 @@ describe 'Storage', ->
         8888: 9999999
 
       this.storageGetStub.restore()
-      stub = this.sandbox.stub(Chrome.storage.local, 'get', (key, callback) ->
+      stub = this.sandbox.stub(Browser, 'retrieveFromStorage', (key, callback) ->
         callback expectedStorageContent
       )
 
@@ -79,7 +80,7 @@ describe 'Storage', ->
 
   describe 'Testing Remove', ->
     it 'should remove a key correctly and write into chrome storage', ->
-      stub = this.sandbox.stub(Chrome.storage.local, 'remove')
+      stub = this.sandbox.stub(Browser, 'removeFromStorage')
 
       Storage.set('asdf', 123)
       Storage.set('asdf2', 123)

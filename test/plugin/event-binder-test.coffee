@@ -1,5 +1,5 @@
 {EventBinder} = require '../../src/event-binder'
-{Chrome} = require '../../src/chrome'
+{Browser} = require '../../src/browser'
 {PackageManager} = require '../../src/package-manager'
 {Storage} = require '../../src/storage'
 {Runtime} = require '../../src/runtime'
@@ -13,7 +13,7 @@ describe 'Event Binder ', ->
     this.sandbox.restore()
 
   it 'shold bind chrome message events on init', ->
-    bindMessageEventStub = this.sandbox.stub(Chrome.runtime.onMessage, 'addListener')
+    bindMessageEventStub = this.sandbox.stub(Browser, 'addEventListener')
     messageListenerStub = this.sandbox.stub(EventBinder, 'messageListener')
     EventBinder.init()
 

@@ -3,7 +3,6 @@
 {ServerManager} = require '../../src/server-manager'
 {ProxyManager} = require '../../src/proxy-manager'
 {Storage} = require '../../src/storage'
-{Chrome} = require '../../src/chrome'
 {Browser} = require '../../src/browser'
 
 describe 'Runtime ', ->
@@ -115,13 +114,13 @@ describe 'Runtime ', ->
 
       generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
       setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
-      chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
+      chromeBadgeTextStub = this.sandbox.stub(Browser, 'setIcontext')
 
       Runtime.start()
 
       assert.isTrue(getInstalledPackagesStub.calledOnce)
       assert.isTrue(getServersStub.calledOnce)
-      assert.isTrue(chromeBadgeTextStub.calledWith({text: ""}))
+      assert.isTrue(chromeBadgeTextStub.calledWith(""))
 
       assert.isTrue(generatePacStub.calledOnce)
       assert.isTrue(setPacStub.calledOnce)
@@ -142,8 +141,8 @@ describe 'Runtime ', ->
 
     it 'should reset the proxy on stop and change icon + text', ->
       clearProxyStub = this.sandbox.stub(ProxyManager, 'clearProxy')
-      chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
-      chromeSetIconStub = this.sandbox.stub(Chrome.browserAction, 'setIcon')
+      chromeBadgeTextStub = this.sandbox.stub(Browser, 'setIcontext')
+      chromeSetIconStub = this.sandbox.stub(Browser, 'setIcon')
 
       Runtime.stop()
 
