@@ -68,7 +68,7 @@ module.exports = function (grunt) {
         ngmin: {
             dist: {
                 files: [
-                    {expand: true, src: ['.build/src/pages/**/*.js'], dest: ''},
+                    {expand: true, src: ['dist/src/pages/**/*.js'], dest: ''},
                 ]
             }
         },
@@ -193,10 +193,10 @@ module.exports = function (grunt) {
 
         'copy:build',
         'copy:dist',
-
         'ngmin:dist',
+
         'browserify:dist',
-        'closurecompiler:dist',
+        'uglify:dist',
         'cssmin:dist',
         'htmlmin:dist',
         'clean:build'
