@@ -1,5 +1,4 @@
 {Storage} = require '../../src/storage'
-{Chrome} = require '../../src/chrome'
 {Browser} = require '../../src/browser'
 
 describe 'Storage', ->
