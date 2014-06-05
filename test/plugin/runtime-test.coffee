@@ -4,6 +4,7 @@
 {ProxyManager} = require '../../src/proxy-manager'
 {Storage} = require '../../src/storage'
 {Chrome} = require '../../src/chrome'
+{Browser} = require '../../src/browser'
 
 describe 'Runtime ', ->
   beforeEach ->
@@ -54,7 +55,7 @@ describe 'Runtime ', ->
 
       generatePacStub = this.sandbox.stub(ProxyManager, 'generateProxyAutoconfigScript')
       setPacStub = this.sandbox.stub(ProxyManager, 'setProxyAutoconfig')
-      chromeBadgeTextStub = this.sandbox.stub(Chrome.browserAction, 'setBadgeText')
+      setBadgeTextStub = this.sandbox.stub(Browser, 'setIcontext')
 
       Runtime.start()
 
@@ -62,7 +63,7 @@ describe 'Runtime ', ->
       assert.isTrue(getServersStub.calledOnce)
 
       # Browser text got changed
-      assert.isTrue(chromeBadgeTextStub.calledWith({text: "None"}))
+      assert.isTrue(setBadgeTextStub.calledWith('None'))
 
       # It shouldn't do anything other than that
       assert.isFalse(generatePacStub.calledOnce)

@@ -2,7 +2,7 @@
 {ServerManager} = require './server-manager'
 {ProxyManager} = require './proxy-manager'
 {Storage} = require './storage'
-{Chrome} = require './chrome'
+{Browser} = require './browser'
 
 class Runtime
   init: ->
@@ -16,17 +16,17 @@ class Runtime
       @stop()
       return
 
-    Chrome.browserAction.setIcon({path: "ressources/images/icon48.png"});
-    Chrome.browserAction.setBadgeText({text: ""})
+    Browser.setIcon("ressources/images/icon48")
+    Browser.setIcontext("")
 
     packages = PackageManager.getInstalledPackages()
     servers = ServerManager.getServers()
 
     if packages.length == 0 or servers.length == 0
         if packages.length == 0
-          Chrome.browserAction.setBadgeText({text: "None"})
+          Browser.setIcontext("None")
     else
-        Chrome.browserAction.setBadgeText({text: ""})
+        Browser.setIcontext("")
         pac = ProxyManager.generateProxyAutoconfigScript(packages, servers)
         ProxyManager.setProxyAutoconfig(pac)
 
@@ -44,8 +44,8 @@ class Runtime
    * Removed the proxy from chrome
   ###
   stop: ->
-    Chrome.browserAction.setBadgeText({text: "Off"})
-    Chrome.browserAction.setIcon({path: "ressources/images/icon48_grey.png"});
+    Browser.setIcontext("Off")
+    Browser.setIcon("ressources/images/icon48_grey.png")
     ProxyManager.clearProxy()
 
 exports.Runtime = new Runtime()

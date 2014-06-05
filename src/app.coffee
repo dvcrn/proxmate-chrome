@@ -5,9 +5,11 @@
 {ServerManager} = require './server-manager'
 {EventBinder} = require './event-binder'
 {Runtime} = require './runtime'
+{Browser} = require './browser'
 
 class App
   init: ->
+    Browser.init()
     Config.init()
     # Storage is built on top of asynchronous chrome.storage code.
     # We have to use a callback to make sure the content has been copied from storage into ram

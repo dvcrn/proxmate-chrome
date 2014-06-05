@@ -1,4 +1,4 @@
-{Chrome} = require './chrome'
+{Browser} = require './browser'
 
 class ProxyManager
   init: ->
@@ -90,21 +90,13 @@ class ProxyManager
    * @param {Function} callback  callback to execute after
   ###
   setProxyAutoconfig: (pacScript, callback) ->
-    config =
-        mode: "pac_script",
-        pacScript:
-          data: pacScript
-
-    Chrome.proxy.settings.set({
-      value: config,
-      scope: 'regular'
-    }, callback)
+    Browser.setProxyAutoconfig(pacScript, callback)
 
   ###*
    * Removes all custom proxies and resets to system
    * @param  {Function} callback callback
   ###
   clearProxy: (callback) ->
-    Chrome.proxy.settings.clear({}, callback);
+    Browser.clearProxy()
 
 exports.ProxyManager = new ProxyManager()

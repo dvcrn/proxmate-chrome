@@ -1,4 +1,4 @@
-{Chrome} = require './chrome'
+{Browser} = require './browser'
 
 class Storage
   # Internal array to keep in ram for faster look ups
@@ -22,11 +22,11 @@ class Storage
   copyIntoChromeStorage: ->
     clearInterval @copyInterval
     @copyInterval = setTimeout(=>
-      Chrome.storage.local.set(@internStorage)
+      Browser.writeIntoStorage(@internStorage)
     , 1000)
 
   copyFromChromeStorage: (callback) ->
-    Chrome.storage.local.get(null, (object) =>
+    Browser.retrieveFromStorage(null, (object) =>
       @internStorage = object
       callback()
     )
@@ -57,7 +57,7 @@ class Storage
   ###
   remove: (key) ->
     delete @internStorage[key]
-    Chrome.storage.local.remove(key)
+    Browser.removeFromStorage(key)
     @copyIntoChromeStorage()
 
 exports.Storage = new Storage()
