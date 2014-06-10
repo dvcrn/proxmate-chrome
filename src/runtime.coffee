@@ -16,7 +16,7 @@ class Runtime
       @stop()
       return
 
-    Browser.setIcon("ressources/images/icon48")
+    Browser.setIcon("ressources/images/icon48.png")
     Browser.setIcontext("")
 
     packages = PackageManager.getInstalledPackages()
@@ -35,10 +35,10 @@ class Runtime
   ###
   restart: ->
     @stop()
-    ServerManager.init( ->
+    ServerManager.init( =>
       PackageManager.init() # Since we want to fetch new packages / update the existing ones
+      @start()
     )
-    @start()
 
   ###*
    * Removed the proxy from chrome

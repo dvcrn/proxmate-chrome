@@ -202,7 +202,8 @@ module.exports = function (grunt) {
         'copy:dist',
 
         'browserify:dist',
-        'uglify:dist',
+        // 'uglify:dist',
+        'closurecompiler:dist',
         'cssmin:dist',
         'htmlmin:dist',
         'clean:build'
