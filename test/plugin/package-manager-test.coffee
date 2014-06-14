@@ -205,10 +205,8 @@ describe 'Package Manager', ->
     it 'should retrieve all installed packages', ->
       expectedJson = testPackages
 
-      # We need different functionality for get this time, so restore the old one
-      this.storageGetStub.restore()
       # We are loading mock data and create a simple dummy funciton which just returns from the mock data if id matches
-      StorageGetMock = this.sandbox.stub(Storage, 'get', (key) ->
+      this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
         switch key
           when 'installed_packages'
             ids = {}
@@ -222,10 +220,10 @@ describe 'Package Manager', ->
       )
 
       packages = PackageManager.getInstalledPackages()
-      assert.equal((testPackages.length + 1), StorageGetMock.callCount)
-      assert.isTrue(StorageGetMock.calledWith('installed_packages'), 'Installed packages have been queried from storage')
+      assert.equal((testPackages.length + 1), this.storageGetStub.callCount)
+      assert.isTrue(this.storageGetStub.calledWith('installed_packages'), 'Installed packages have been queried from storage')
       for pkg in testPackages
-        assert.isTrue(StorageGetMock.calledWith(pkg._id), 'Got called with the correct id')
+        assert.isTrue(this.storageGetStub.calledWith(pkg._id), 'Got called with the correct id')
 
       assert.deepEqual(expectedJson.sort(), packages.sort())
 
