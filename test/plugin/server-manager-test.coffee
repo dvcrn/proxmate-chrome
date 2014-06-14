@@ -1,6 +1,7 @@
 {ServerManager} = require '../../src/server-manager'
 {Config} = require '../../src/config'
 {Storage} = require '../../src/storage'
+{Browser} = require '../../src/browser'
 
 testServers = require '../testdata/servers.json'
 
@@ -10,8 +11,6 @@ describe 'Server Manager', ->
     this.storageStub = this.sandbox.stub(Storage, 'get', ->
       return testServers
     )
-
-    this.xhr = this.sandbox.useFakeXMLHttpRequest()
 
   afterEach ->
     this.sandbox.restore()
@@ -84,13 +83,12 @@ describe 'Server Manager', ->
       callback = this.sandbox.spy()
       storageSetStub = this.sandbox.stub(Storage, 'set')
 
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(2, testServers)
       ServerManager.fetchServerList(callback)
 
       assert.isTrue(configGetStub.calledWith('primary_server'))
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal("www.abc.de/server/list.json", this.sandbox.server.requests[0].url)
-
-      this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith('www.abc.de/server/list.json'))
 
       assert.isTrue(callback.calledOnce)
       assert.isTrue(storageSetStub.calledWith('server_config', testServers))
@@ -110,11 +108,11 @@ describe 'Server Manager', ->
       callback = this.sandbox.spy()
       storageSetStub = this.sandbox.stub(Storage, 'set')
 
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(2, testServers)
       ServerManager.fetchServerList(callback)
 
       assert.isTrue(configGetStub.calledWith('primary_server'))
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal("www.abc.de/server/list.json?key=foo", this.sandbox.server.requests[0].url)
-      this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(testServers))
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith('www.abc.de/server/list.json?key=foo'))
 
       assert.isTrue(storageGetStub.calledOnce)

@@ -1,5 +1,6 @@
 {Storage} = require './storage'
 {Config} = require './config'
+{Browser} = require './browser'
 
 class PackageManager
   init: ->
@@ -17,8 +18,9 @@ class PackageManager
       donationKey = encodeURIComponent(donationKey)
       updateUrl = "#{server}/package/update.json?key=#{donationKey}"
 
-    $.get updateUrl, (data) ->
+    Browser.xhr(updateUrl, 'GET', (data) ->
       callback(data)
+    )
 
   ###*
    * Queries the primary server and checks for updates
@@ -53,32 +55,30 @@ class PackageManager
       donationKey = encodeURIComponent(donationKey)
       packageUrl = "#{server}/package/#{key}/install.json?key=#{donationKey}"
 
-    $.ajax packageUrl,
-      type: "GET",
-      success: (packageData) ->
-        # Query existing installed packages and add the new version / id
-        installedPackages = Storage.get('installed_packages')
-        if not installedPackages
-          installedPackages = {}
+    Browser.xhr packageUrl, 'GET', (packageData) ->
+      # Query existing installed packages and add the new version / id
+      installedPackages = Storage.get('installed_packages')
+      if not installedPackages
+        installedPackages = {}
 
-        installedPackages[key] = packageData['version']
+      installedPackages[key] = packageData['version']
 
-        Storage.set(key, packageData)
-        Storage.set('installed_packages', installedPackages)
+      Storage.set(key, packageData)
+      Storage.set('installed_packages', installedPackages)
 
-        {Runtime} = require('./runtime')
-        Runtime.restart()
-        callback({success: true})
-      error: (xhr) ->
-        switch xhr.status
-          when 401
-            callback {success: false, message: xhr.responseJSON.message}
-            return
-          when 404
-            callback {success: false, message: "The package you tried to install doesn't exist..."}
-            return
-          else
-            callback {success: false, message: 'There was a problem installing this package.'}
+      {Runtime} = require('./runtime')
+      Runtime.restart()
+      callback({success: true})
+    , (xhr) ->
+      switch xhr.status
+        when 401
+          callback {success: false, message: xhr.responseJSON.message}
+          return
+        when 404
+          callback {success: false, message: "The package you tried to install doesn't exist..."}
+          return
+        else
+          callback {success: false, message: 'There was a problem installing this package.'}
 
   ###*
    * Returns all installed packages with their package contents

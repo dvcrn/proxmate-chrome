@@ -1,5 +1,6 @@
 {Storage} = require './storage'
 {Config} = require './config'
+{Browser} = require './browser'
 
 
 class ServerManager
@@ -37,11 +38,11 @@ class ServerManager
       donationKey = encodeURIComponent(donationKey)
       serverUrl = "#{server}/server/list.json?key=#{donationKey}"
 
-    $.get(serverUrl, (data) =>
+    Browser.xhr serverUrl, 'GET', (data) =>
       @servers = data
       Storage.set('server_config', @servers)
       callback()
-    )
+
 
   ###*
    * Return all servers

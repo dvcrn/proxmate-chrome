@@ -1,4 +1,5 @@
 {Chrome} = require './chrome'
+$ = require '../bower_components/jquery/dist/jquery.js'
 
 class Browser
   init: ->
@@ -68,5 +69,25 @@ class Browser
   ###
   addEventListener: (listener) ->
     Chrome.runtime.onMessage.addListener listener
+
+  ###*
+   * Performs a xmlhttprequest
+   * @param  {string} url             the url to request
+   * @param  {string} type            POST or GET
+   * @param  {Function} successCallback callback
+   * @param  {Function} errorCallback   callback
+  ###
+  xhr: (url, type, successCallback, errorCallback) ->
+    if !successCallback?
+      successCallback = ->
+
+    if !errorCallback?
+      errorCallback = ->
+
+    $.ajax url,
+      type: type,
+      success: successCallback
+      error: errorCallback
+
 
 exports.Browser = new Browser()

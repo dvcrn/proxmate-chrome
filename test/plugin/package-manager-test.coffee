@@ -2,6 +2,7 @@
 {Storage} = require '../../src/storage'
 {Config} = require '../../src/config'
 {Runtime} = require '../../src/runtime'
+{Browser} = require '../../src/browser'
 
 testPackages = require '../testdata/packages.json'
 testServers = require '../testdata/servers.json'
@@ -15,7 +16,6 @@ describe 'Package Manager', ->
       return 'www.abc.de'
     )
 
-    this.xhr = this.sandbox.useFakeXMLHttpRequest()
     this.runtimeStub = this.sandbox.stub(Runtime, 'restart')
 
   afterEach ->
@@ -30,29 +30,31 @@ describe 'Package Manager', ->
 
     it 'should download the version overview and execute callback', ->
       callback = this.sandbox.spy()
-      PackageManager.downloadVersionRepository(callback)
 
+      # Fake XHR
       expectedPayload = {
         "1337asdf": 1,
         "anotherrandomID": 2
       }
 
-      # Fake XHR
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal('www.abc.de/package/update.json', this.sandbox.server.requests[0].url)
-      this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(expectedPayload))
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(2, expectedPayload)
 
+      PackageManager.downloadVersionRepository(callback)
+
+      assert.isTrue(xhrMock.calledOnce)
       assert.isTrue(callback.calledWith(expectedPayload))
 
     it 'should attach the donation key to the download url if available', ->
+      xhrMock = this.sandbox.stub(Browser, 'xhr')
       this.storageGetStub = this.sandbox.stub(Storage, 'get', (key) ->
         return 'foo'
       )
 
       callback = this.sandbox.spy()
       PackageManager.downloadVersionRepository(callback)
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal('www.abc.de/package/update.json?key=foo', this.sandbox.server.requests[0].url)
+
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith('www.abc.de/package/update.json?key=foo'))
 
     it 'should call downloadVersionRepository and install / delete outdated packages', ->
       # Mock storage.get to return a fake array of installed packages
@@ -107,12 +109,13 @@ describe 'Package Manager', ->
       pkgInfo = testPackages[0]
 
       callback = this.sandbox.spy()
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(2, pkgInfo)
+
       PackageManager.installPackage(pkgId, callback)
 
       # Fake xhr answer
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal("www.abc.de/package/#{pkgId}/install.json", this.sandbox.server.requests[0].url)
-      this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith("www.abc.de/package/#{pkgId}/install.json"))
 
       # The packagemanager should retrieve installed_packages
       assert.isTrue(this.storageGetStub.calledTwice)
@@ -140,12 +143,12 @@ describe 'Package Manager', ->
         return {}
       )
       callback = this.sandbox.spy()
+      xhrMock = this.sandbox.stub(Browser, 'xhr')
       PackageManager.installPackage('asdf', callback)
 
       # Fake xhr answer
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal("www.abc.de/package/asdf/install.json?key=asdf", this.sandbox.server.requests[0].url)
-      # this.sandbox.server.requests[0].respond(200, {'Content-Type':'application/json'}, JSON.stringify(pkgInfo))
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith('www.abc.de/package/asdf/install.json?key=asdf'))
 
     it 'should react correctly on 401 (unauthorised) status', ->
       this.storageSetStub = this.sandbox.stub(Storage, 'set')
@@ -156,13 +159,14 @@ describe 'Package Manager', ->
         return {}
       )
       callback = this.sandbox.spy()
+
+      # Simulate error message
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(3, { status: 401, responseJSON: { "message": "Foo" } })
       PackageManager.installPackage('asdf', callback)
 
       # Fake xhr answer
-      assert.equal(1, this.sandbox.server.requests.length)
-      assert.equal("www.abc.de/package/asdf/install.json?key=asdf", this.sandbox.server.requests[0].url)
-      this.sandbox.server.requests[0].respond(401, {'Content-Type':'application/json'}, JSON.stringify(
-        { "message": "Foo" }))
+      assert.isTrue(xhrMock.calledOnce)
+      assert.isTrue(xhrMock.calledWith('www.abc.de/package/asdf/install.json?key=asdf'))
 
       # Check that restart didn't get called
       assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
@@ -175,9 +179,10 @@ describe 'Package Manager', ->
       )
 
       callback = this.sandbox.spy()
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(3, { status: 500 })
       PackageManager.installPackage('asdf', callback)
 
-      this.sandbox.server.requests[0].respond(500, {'Content-Type':'text/html'})
+      assert.isTrue(xhrMock.calledOnce)
       assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
       assert.isTrue(callback.calledWith({success: false, message: 'There was a problem installing this package.'}))
 
@@ -187,9 +192,10 @@ describe 'Package Manager', ->
         return {}
       )
       callback = this.sandbox.spy()
+      xhrMock = this.sandbox.stub(Browser, 'xhr').callsArgWith(3, { status: 404 })
       PackageManager.installPackage('asdf2', callback)
 
-      this.sandbox.server.requests[0].respond(404, {'Content-Type':'text/html'})
+      assert.isTrue(xhrMock.calledOnce)
       assert.isFalse(this.runtimeStub.calledOnce, "Runtime didn't get called")
       assert.isTrue(callback.calledWith({success: false, message: "The package you tried to install doesn't exist..."}))
 
