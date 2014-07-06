@@ -15,6 +15,15 @@
   },
   "content_scripts": [
     {
+      "matches": ["*://*/**"],
+      "js": [
+        "bower_components/jquery/dist/jquery.js",
+        "src/page-worker/services/proxmate.js",
+        "src/page-worker/proxmatecs.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
       "matches": ["*://proxmate.me/*"],
       "js": [
         "bower_components/jquery/dist/jquery.js",
