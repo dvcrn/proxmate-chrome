@@ -20,7 +20,7 @@ class Storage
    * Writes the RAM storage into chrome HDD storage, after a 1 second delay
   ###
   copyIntoChromeStorage: ->
-    clearInterval @copyInterval
+    clearTimeout @copyInterval
     @copyInterval = setTimeout(=>
       Browser.writeIntoStorage(@internStorage)
     , 1000)
