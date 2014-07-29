@@ -26,7 +26,7 @@ class ProxyManager
     return "(#{configStrings.join(' && ')})"
 
   ###*
-   * Generates and scrumbles the available servers
+   * Generatea and scrumbles the available servers
    * @param  {Array} serverArray the array of servers to join
    * @return {String}             the serverString
   ###
@@ -77,7 +77,7 @@ class ProxyManager
       if parsedRules[country]?
         conditions = "#{parsedRules[country].join(' || ')}"
         configLines.push("#{statement} (#{conditions}) { return '#{@generateAndScrumbleServerString(servers)}' }")
-      i += 1
+        i += 1
 
     # Add the last else case, if no proxy was found
     configLines.push("else { return 'DIRECT'; }")
