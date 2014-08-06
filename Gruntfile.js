@@ -156,6 +156,9 @@ module.exports = function (grunt) {
                 files: [{
                     '.build/proxmate.json': 'proxmate.json',
                     '.build/manifest.json': 'manifest.json',
+                    '.build/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
+                    '.build/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
+                    '.build/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
                 }]
             },
             dist: {
