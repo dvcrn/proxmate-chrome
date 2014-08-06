@@ -19,10 +19,16 @@ checkUrl = ->
   # Remove the link, if any. This script will handle the onClick now
   installButton.attr('a', '')
 
-  # Finally, add a click handler
-  installButton.mouseup ->
+  $('.confirmInstallButton').mouseup ->
     # Packageid is set by the server as a seperate attribute
     packageid = installButton.attr('packageid')
     window.open chrome.extension.getURL("pages/install/index.html#!/install/#{packageid}")
+
+  $('.cancelbutton').mouseup ->
+    $('.installPopupWrapper').fadeOut('fast')
+
+  # Finally, add a click handler
+  installButton.mouseup ->
+    $('.installPopupWrapper').fadeIn('fast')
 
 setInterval checkUrl, 1000
