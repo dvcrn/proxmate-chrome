@@ -12,16 +12,16 @@ class ProxyManager
     configStrings = []
     # Parse startswith commands to shExpMatch(url, '*') expressions
     if config.startsWith.length > 0
-      configStrings.push("shExpMatch(url, '#{config.startsWith}*')")
+      configStrings.push("shExpMatch(url, #{JSON.stringify(config.startsWith + "*").replace(/"/g, "'")})")
 
     # Parse contains commands to url.indexOf('multiple things') != -1 expressions
     if config.contains.length > 0
       for containElement in config.contains
-        configStrings.push("url.indexOf('#{containElement}') != -1")
+        configStrings.push("url.indexOf(#{JSON.stringify(containElement).replace(/"/g, "'")}) != -1")
 
     # Parse host commands to host == 'x' expressions
     if config.host.length > 0
-      configStrings.push("host == '#{config.host}'")
+      configStrings.push("host == #{JSON.stringify(config.host).replace(/"/g, "'")}")
 
     return "(#{configStrings.join(' && ')})"
 
@@ -76,7 +76,7 @@ class ProxyManager
 
       if parsedRules[country]?
         conditions = "#{parsedRules[country].join(' || ')}"
-        configLines.push("#{statement} (#{conditions}) { return '#{@generateAndScrumbleServerString(servers)}' }")
+        configLines.push("#{statement} (#{conditions}) { return #{JSON.stringify(@generateAndScrumbleServerString(servers)).replace(/"/g, "'")} }")
         i += 1
 
     # Add the last else case, if no proxy was found
