@@ -1,6 +1,9 @@
 class Chrome
   init: ->
 
+  tabs:
+    create: ->
+
   storage:
     local:
       set: ->

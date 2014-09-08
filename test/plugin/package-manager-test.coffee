@@ -81,15 +81,13 @@ describe 'Package Manager', ->
       )
 
       # InstalledPackage should get called after finding outdated packages
+      openTabStub = this.sandbox.stub(Browser, "createTab")
       installPackageStub = this.sandbox.stub(PackageManager, "installPackage")
       removePackageStub = this.sandbox.stub(PackageManager, "removePackage")
 
       PackageManager.checkForUpdates()
       assert.isTrue(downloadVersionRepositoryStub.calledOnce)
-
-      assert.isTrue(installPackageStub.calledTwice, "All outdated packages have been passed to installing")
-      assert.isTrue(installPackageStub.calledWith('somethingOutdated'))
-      assert.isTrue(installPackageStub.calledWith('somethingElseOutdated'))
+      assert.isTrue(openTabStub.calledTwice, "All outdated packages have been passed to installing")
 
       assert.isTrue(removePackageStub.calledOnce)
       assert.isTrue(removePackageStub.calledWith('somethingToDelete'))

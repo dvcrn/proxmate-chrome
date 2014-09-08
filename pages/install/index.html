@@ -12,7 +12,8 @@
 	<body ng-app="proxmateApp">
     <div class="small-12 columns installPopupWrapper">
       <div class="small-12 medium-8 large-6 medium-centered installPopup columns">
-        <h3>ProxMate installer</h3>
+        <h3 ng-hide="method == 'update'">ProxMate installer</h3>
+        <h3 ng-show="method == 'update'">ProxMate update available</h3>
         <section class="container" ng-view=""></section>
       </div>
     </div>

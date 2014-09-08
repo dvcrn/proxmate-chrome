@@ -34,7 +34,7 @@ class PackageManager
         if key of versionRepository
           # If the version on the server is higher, reinstall the package
           if versionRepository[key] > val
-            @installPackage(key)
+            Browser.createTab("pages/install/index.html#!/confirm/update/#{key}")
           # -1 implied that the package is no longer available and marked for delete
           if versionRepository[key] == -1
             @removePackage(key)

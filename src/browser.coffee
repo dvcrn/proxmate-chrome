@@ -5,6 +5,13 @@ class Browser
   init: ->
 
   ###*
+   * Opens url in a new tab
+   * @param {String} url the url to open
+  ###
+  createTab: (url) ->
+    Chrome.tabs.create({url: url})
+
+  ###*
    * Sets browser wide proxy to autoconfig
    * @param {String}   pacScript the autoconfig string
    * @param {Function} callback  callback to execute after

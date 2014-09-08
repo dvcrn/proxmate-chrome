@@ -40,9 +40,9 @@ angular.module('proxmateApp')
 ]
 
 angular.module('proxmateApp')
-  .controller 'ConfirmCtrl', ['$scope', '$routeParams', '$http', ($scope, $routeParams, $http) ->
-    $scope.method = $routeParams.method
+  .controller 'ConfirmCtrl', ['$rootScope', '$routeParams', '$http', ($rootScope, $routeParams, $http) ->
+    $rootScope.method = $routeParams.method
     $http.get("http://api.proxmate.me/package/#{$routeParams.packageId}.json").success (data) ->
-      $scope.packageData = data
+      $rootScope.packageData = data
 ]
 

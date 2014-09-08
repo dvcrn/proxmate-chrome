@@ -1,5 +1,4 @@
 checkUrl = ->
-  console.info('check')
   url = location.href
   if url.indexOf('package/') == -1
     return
