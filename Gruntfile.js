@@ -145,7 +145,9 @@ module.exports = function (grunt) {
                         '.tmp/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.js',
                         '.tmp/bower_components/angular/angular.js': 'bower_components/angular/angular.js',
                         '.tmp/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.js',
-                        '.tmp/bower_components/angular-mocks/angular-mocks.js': 'bower_components/angular-mocks/angular-mocks.js'
+                        '.tmp/bower_components/angular-mocks/angular-mocks.js': 'bower_components/angular-mocks/angular-mocks.js',
+                        '.tmp/bower_components/foundation/css/foundation.min.css': 'bower_components/foundation/css/foundation.min.css',
+                        '.tmp/bower_components/foundation/css/normalize.css': 'bower_components/foundation/css/normalize.css',
                     },
                     {expand: true, src: ['test/testdata/**'], dest: '.tmp/'},
                     {expand: true, src: ['ressources/**'], dest: '.tmp/'},
@@ -159,16 +161,20 @@ module.exports = function (grunt) {
                     '.build/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
                     '.build/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
                     '.build/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
+                    '.build/bower_components/foundation/css/foundation.min.css': 'bower_components/foundation/css/foundation.min.css',
+                    '.build/bower_components/foundation/css/normalize.css': 'bower_components/foundation/css/normalize.css',
                 }]
             },
             dist: {
                 files: [{
-                        'dist/manifest.json': 'manifest.json',
-                        'dist/background.html': 'background.html',
-                        'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
-                        'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
-                        'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
-                    },
+                    'dist/manifest.json': 'manifest.json',
+                    'dist/background.html': 'background.html',
+                    'dist/bower_components/jquery/dist/jquery.js': 'bower_components/jquery/dist/jquery.min.js',
+                    'dist/bower_components/angular/angular.js': 'bower_components/angular/angular.min.js',
+                    'dist/bower_components/angular-route/angular-route.js': 'bower_components/angular-route/angular-route.min.js',
+                    'dist/bower_components/foundation/css/foundation.min.css': 'bower_components/foundation/css/foundation.min.css',
+                    'dist/bower_components/foundation/css/normalize.css': 'bower_components/foundation/css/normalize.css',
+                },
 
                     {expand: true, src: ['ressources/**'], dest: 'dist/'},
                     {expand: true, src: ['pages/**'], dest: 'dist/'},

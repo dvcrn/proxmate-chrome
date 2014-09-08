@@ -1,5 +1,37 @@
 'use strict'
 
+describe 'Controller: ConfirmCtrl', () ->
+
+  # load the controller's module
+  beforeEach module 'proxmateApp'
+
+  MainCtrl = {}
+  scope = {}
+  controller = {}
+  httpBackend = {}
+
+  # Initialize the controller and a mock scope
+  beforeEach inject ($controller, $rootScope, $httpBackend) ->
+    scope = $rootScope.$new()
+    controller = $controller
+    httpBackend = $httpBackend
+
+  it 'should fetch package information', () ->
+    httpBackend.expectGET("http://api.proxmate.me/package/123.json")
+    InstallCtrl = controller 'ConfirmCtrl', {
+      $scope: scope
+      $routeParams: {
+        'method': 'foo',
+        'packageData': 'bar',
+        'packageId': 123
+      }
+    }
+
+    httpBackend.when('GET', "http://api.proxmate.me/package/123.json").respond({'moo': 'cow'})
+    httpBackend.flush()
+    expect(scope.method).toBe 'foo'
+    expect(scope.packageData).toEqual {'moo': 'cow'}
+
 describe 'Controller: InstallCtrl', () ->
 
   # load the controller's module

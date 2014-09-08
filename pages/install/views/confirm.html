@@ -1,0 +1,19 @@
+<p>You are about to {{ method }} the ProxMate package '<strong>{{ packageData.name }}</strong>'.</p>
+<hr />
+<p>This package will <strong class="blue">proxy</strong> the following urls</p>
+<ul>
+  <li ng-repeat="domain in packageData.touchedDomains">{{ domain }}</li>
+</ul>
+<hr />
+<p>This package <strong class="red">injects</strong> scripts into the following urls</p>
+<ul>
+  <li ng-repeat="host in packageData.hosts">{{ host }}</li>
+</ul>
+<hr />
+<p><strong>If you don't want any of this, please stop now or proceed at your own risk.</strong> <br/>Are you sure you want to proceed installing?</p>
+<div class="row">
+  <div class="small-8 small-centered columns">
+    <a class="small-5 column button cancelbutton" href="#!/">Cancel</a>
+    <a class="small-5 column button confirmInstallButton" ng-href="#!/install/{{ packageData.id }}" href="#!/">Install</a>
+  </div>
+</div>

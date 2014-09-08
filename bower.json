@@ -21,7 +21,8 @@
     "requirejs-text": "~2.0.10",
     "jquery": "~2.1.0",
     "angular": "~1.2.13",
-    "angular-route": "~1.2.13"
+    "angular-route": "~1.2.13",
+    "foundation": "~5.1.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.13"

@@ -1,7 +1,8 @@
 body {
-	font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-	background: #eee;
-	color: #222222;
+  font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: rgba(0,0,0,.7);
 }
 
 h1 {
@@ -11,25 +12,54 @@ h1 {
 	text-rendering: optimizeLegibility;
 }
 
-.wrapper {
-	margin: 0 auto;
-	max-width: 500px;
-	text-align: center;
-	box-shadow: 0 0 10px #428cc0;
-	border-radius: 1.0em;
-}
-
-header {
-	padding-top: 10px;
-}
-
-.container {
-	line-height: 50px;
-	background: grey;
-	color: white;
-}
-
 footer p {
 	font-size: 15px;
 	line-height: 25px;
+}
+
+.installPopup {
+  margin: 15px auto;
+  background: #eee;
+  z-index: 3;
+  top: 15px;
+  border-radius: 12px;
+  padding-top: 20px;
+  width: 625px;
+  text-align: left;
+}
+
+.button {
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  background: rgba(79,151,202,0.75);
+  margin-bottom: 15px;
+  width: 161px;
+}
+
+.button:hover {
+  box-shadow: 0 0 10px #428cc0;
+  color: white;
+}
+
+.cancelbutton {
+  background: #f36c60;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  margin-bottom: -5px;
+}
+
+.installPopupWrapper {
+  text-align: center;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: scroll;
+  z-index: 2;
+  width: 100%;
 }

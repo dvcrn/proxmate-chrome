@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="../../bower_components/foundation/css/normalize.css">
+		<link rel="stylesheet" href="../../bower_components/foundation/css/foundation.min.css">
 		<link rel="stylesheet" href="css/install.css">
 		<script src="../../bower_components/angular/angular.js"></script>
 		<script src="../../bower_components/angular-route/angular-route.js"></script>
@@ -8,15 +10,11 @@
 		<script src="../../src/pages/services/chrome.js"></script>
 	</head>
 	<body ng-app="proxmateApp">
-		<div class="wrapper">
-			<header>
-				<img src="../../ressources/images/icon128.png" alt="">
-				<h1>ProxMate package installer</h1>
-			</header>
-			<section class="container" ng-view=""></section>
-			<footer>
-				<p>Thanks for using ProxMate :)</p>
-			</footer>
-		</div>
+    <div class="small-12 columns installPopupWrapper">
+      <div class="small-12 medium-8 large-6 medium-centered installPopup columns">
+        <h3>ProxMate installer</h3>
+        <section class="container" ng-view=""></section>
+      </div>
+    </div>
 	</body>
 </html>
