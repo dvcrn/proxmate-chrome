@@ -21,9 +21,9 @@
           <h2>Installed Packages</h2>
           <div ng-show="installedPackages.length == 0" class="no-package-warning">
             <p>Hello! It looks like you have no packages installed as of yet. You need to install a few before ProxMate is able to work!</p>
-            <p><a href="http://proxmate.me/packages" target="_top">Click here to install some!</a></p>
+            <p><a href="http://proxmate.me/packages/" target="_top">Click here to install some!</a></p>
           </div>
-          <p ng-show="installedPackages.length > 0">These are all packages you currently have installed. Click <a href="http://proxmate.me/packages" target="_blank">here</a> for more!</p>
+          <p ng-show="installedPackages.length > 0">These are all packages you currently have installed. Click <a href="http://proxmate.me/packages/" target="_blank">here</a> for more!</p>
           <div class="package" ng-repeat="package in installedPackages">
             <img ng-src="{{ package.smallIcon }}" alt="">
             <p>{{ package.name }}</p>
@@ -33,7 +33,7 @@
         <section class="donate">
           <h2>Support ProxMate</h2>
           <p>Helped ProxMate? Donated over $3? Enter your key here to unlock some extras.</p>
-          <p><a href="http://proxmate.me/donate" target="_blank">Click here for more info!</a></p>
+          <p><a href="http://proxmate.me/donate/" target="_blank">Click here for more info!</a></p>
           <input type="text" ng-disabled="hasDonationkey" name="donationKey" ng-model="donationKey" placeholder="Donation Key">
           <button ng-hide="hasDonationkey" ng-disabled="donationKey.length < 30" ng-click="validateKey(donationKey)">Set Key</button>
           <button ng-show="hasDonationkey" ng-click="clearKey()">Clear Key</button>
