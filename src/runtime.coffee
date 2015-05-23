@@ -11,6 +11,23 @@ class Runtime
    * Starts the app. Retrieves servers and sets pac
   ###
   start: ->
+    # Ping server on first start to gather the actual user count
+    if Storage.get('did_server_ping') == undefined
+      if Storage.get('uuid') == undefined
+        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) ->
+          r = Math.random() * 16 | 0
+          v = if c == 'x' then r else r & 0x3 | 0x8
+          v.toString 16
+        )
+
+        Storage.set('uuid', uuid)
+      else
+        uuid = Storage.get('uuid')
+
+      Browser.xhr("https://damp-retreat-5872.herokuapp.com/api/chrome.json?uuid=#{uuid}", 'POST', (data) ->
+        Storage.set('did_server_ping', true)
+      )
+
     globalStatus = Storage.get('global_status')
     if not globalStatus
       @stop()
