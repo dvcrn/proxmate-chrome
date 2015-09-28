@@ -1,7 +1,7 @@
 # Code has been moved. This version here is not maintained anymore.
 
 ## ProxMate for Chrome
-[![Built Status](Status](https://travis-ci.org/dabido/proxmate-chrome.png "Build Status")](https://travis-ci.org/dabido/ProxMate-chrome/)
+[![Built Status](https://travis-ci.org/dvcrn/proxmate-chrome.png "Build Status")](https://travis-ci.org/dvcrn/ProxMate-chrome/)
 
 Extension store version here - https://chrome.google.com/webstore/detail/proxmate/ifalmiidchkjjmkkbkoaibpmoeichmki
 
